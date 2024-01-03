@@ -1,4 +1,4 @@
-package com.example.Reservation.exception;
+package com.example.reservation.exception;
 
 public class PatientNotFindException extends RuntimeException {
     PatientNotFindException(Integer id) {

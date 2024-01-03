@@ -1,9 +1,8 @@
-package com.example.Reservation.model;
+package com.example.reservation.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 
@@ -16,7 +15,9 @@ public class Doctor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     //@NotEmpty
-    private String name, surname, specialization;
+    private String name;
+    private String surname;
+    private String specialization;
 
 
 

@@ -1,7 +1,7 @@
-package com.example.Reservation.controller;
+package com.example.reservation.controller;
 
-import com.example.Reservation.service.PatientService;
-import com.example.Reservation.model.Patient;
+import com.example.reservation.service.PatientService;
+import com.example.reservation.model.Patient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;

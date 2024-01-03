@@ -1,6 +1,6 @@
-package com.example.Reservation.repository;
+package com.example.reservation.repository;
 
-import com.example.Reservation.model.Patient;
+import com.example.reservation.model.Patient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

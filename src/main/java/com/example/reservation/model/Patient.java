@@ -1,4 +1,4 @@
-package com.example.Reservation.model;
+package com.example.reservation.model;
 
 
 import lombok.*;
