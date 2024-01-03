@@ -1,7 +1,7 @@
-package com.example.Reservation.service;
+package com.example.reservation.service;
 
-import com.example.Reservation.repository.PatientRepository;
-import com.example.Reservation.model.Patient;
+import com.example.reservation.repository.PatientRepository;
+import com.example.reservation.model.Patient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

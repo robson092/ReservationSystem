@@ -1,4 +1,4 @@
-package com.example.Reservation.service;
+package com.example.reservation.service;
 
 import org.springframework.stereotype.Service;
 
