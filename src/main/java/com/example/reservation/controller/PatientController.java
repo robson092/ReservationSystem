@@ -1,5 +1,6 @@
 package com.example.reservation.controller;
 
+import com.example.reservation.dto.PatientDTO;
 import com.example.reservation.service.PatientService;
 import com.example.reservation.model.Patient;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/patients")
@@ -18,18 +20,23 @@ public class PatientController {
     private final PatientService patientService;
 
     @GetMapping(params = {"!sort", "!page", "!size"})
-    ResponseEntity<List<Patient>> getAllPatients() {
-        return ResponseEntity.ok(patientService.getAllPatients());
+    ResponseEntity<List<PatientDTO>> getAllPatients() {
+        return ResponseEntity.ok(patientService.getAllPatients().stream()
+                .map(PatientDTO::new)
+                .collect(Collectors.toList()));
     }
 
     @GetMapping
-    ResponseEntity<List<Patient>> getAllPatients(Pageable page) {
-        return ResponseEntity.ok(patientService.getAllPatientsWithPage(page));
+    ResponseEntity<List<PatientDTO>> getAllPatients(Pageable page) {
+        return ResponseEntity.ok(patientService.getAllPatientsWithPage(page).stream()
+                .map(PatientDTO::new)
+                .collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<Patient> getPatient(@PathVariable int id) {
+    ResponseEntity<PatientDTO> getPatient(@PathVariable int id) {
         return patientService.getPatient(id)
+                .map(PatientDTO::new)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

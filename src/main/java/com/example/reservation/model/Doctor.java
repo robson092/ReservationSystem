@@ -1,15 +1,14 @@
 package com.example.reservation.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.example.reservation.dto.AppointmentFromDoctorPovDTO;
+import com.example.reservation.dto.AppointmentFromPatientPovDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Getter @Setter
@@ -24,7 +23,6 @@ public class Doctor {
     private String surname;
     private String specialization;
     @OneToMany(mappedBy = "doctor")
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private Set<Appointment> appointments;
 
 
@@ -34,6 +32,12 @@ public class Doctor {
         this.surname = surname;
         this.specialization = specialization;
 
+    }
+
+    public Set<AppointmentFromDoctorPovDTO> getAppointmentsForDoctorDTO(Set<Appointment> appointments) {
+        return appointments.stream()
+                .map(AppointmentFromDoctorPovDTO::new)
+                .collect(Collectors.toSet());
     }
 
     @Override

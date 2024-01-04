@@ -1,5 +1,6 @@
 package com.example.reservation.model;
 
+import com.example.reservation.dto.AppointmentFromPatientPovDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -24,12 +25,10 @@ public class Appointment {
     private LocalDateTime date;
     @ManyToOne
     @JoinColumn(name = "patient_id")
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     //@JsonIgnore
     private Patient patient;
     @ManyToOne
     @JoinColumn(name = "doctor_id")
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     //@JsonIgnore
     private Doctor doctor;
 
@@ -38,6 +37,7 @@ public class Appointment {
         this.doctor = doctor;
         this.date = date;
     }
+
 
     @Override
     public String toString() {
