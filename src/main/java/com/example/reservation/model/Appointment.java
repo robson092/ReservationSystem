@@ -1,5 +1,9 @@
 package com.example.reservation.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,11 +22,15 @@ public class Appointment {
 
     //@NotNull
     private LocalDateTime date;
-    @OneToOne(cascade = CascadeType.ALL)
-   //@NotNull
+    @ManyToOne
+    @JoinColumn(name = "patient_id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    //@JsonIgnore
     private Patient patient;
-    @OneToOne(cascade = CascadeType.ALL)
-    //@NotNull
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    //@JsonIgnore
     private Doctor doctor;
 
     public Appointment(Patient patient, Doctor doctor, LocalDateTime date) {
