@@ -1,10 +1,14 @@
 package com.example.reservation.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,6 +34,9 @@ public class Patient {
     private int postalCode;
 
     private String email;
+    @OneToMany(mappedBy = "patient")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    private Set<Appointment> appointments;
 
     @Override
     public String toString() {
