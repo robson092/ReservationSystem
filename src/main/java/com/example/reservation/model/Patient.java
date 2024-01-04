@@ -1,20 +1,18 @@
 package com.example.reservation.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.example.reservation.dto.AppointmentFromPatientPovDTO;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter @Setter
 @Entity
 @Table(name = "patients", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "surname"})})
+@NoArgsConstructor
 public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,8 +33,23 @@ public class Patient {
 
     private String email;
     @OneToMany(mappedBy = "patient")
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private Set<Appointment> appointments;
+
+    public Patient(String name, String surname, String city, String street, int streetNum, int postalCode, String email) {
+        this.name = name;
+        this.surname = surname;
+        this.city = city;
+        this.street = street;
+        this.streetNum = streetNum;
+        this.postalCode = postalCode;
+        this.email = email;
+    }
+
+    public Set<AppointmentFromPatientPovDTO> getAppointmentsForPatientDTO(Set<Appointment> appointments) {
+        return appointments.stream()
+                .map(AppointmentFromPatientPovDTO::new)
+                .collect(Collectors.toSet());
+    }
 
     @Override
     public String toString() {
