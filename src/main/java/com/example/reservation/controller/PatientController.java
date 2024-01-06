@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,7 +43,7 @@ public class PatientController {
     }
 
     @PostMapping
-    ResponseEntity<Patient> addPatient(@RequestBody Patient patientToCreate) {
+    ResponseEntity<Patient> addPatient(@Valid @RequestBody Patient patientToCreate) {
         Patient patient = patientService.save(patientToCreate);
         return ResponseEntity
                 .created(URI.create("/" + patient.getId()))

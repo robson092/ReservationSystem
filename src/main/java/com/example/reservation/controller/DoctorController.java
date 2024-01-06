@@ -9,11 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/doctors")
 public class DoctorController {
@@ -43,7 +44,7 @@ public class DoctorController {
     }
 
     @PostMapping
-    ResponseEntity<Doctor> addDoctor(@RequestBody Doctor doctorToCreate) {
+    ResponseEntity<Doctor> addDoctor(@Valid @RequestBody Doctor doctorToCreate) {
         Doctor doctor = service.save(doctorToCreate);
         return ResponseEntity
                 .created(URI.create("/" + doctor.getId()))
