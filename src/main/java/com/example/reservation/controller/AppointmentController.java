@@ -9,11 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/appointments")
 public class AppointmentController {
@@ -43,7 +44,7 @@ public class AppointmentController {
     }
 
     @PostMapping
-    ResponseEntity<Appointment> addAppointment(@RequestBody Appointment appointmentToCreate) {
+    ResponseEntity<Appointment> addAppointment(@Valid @RequestBody Appointment appointmentToCreate) {
         Appointment appointment = service.save(appointmentToCreate);
         return ResponseEntity
                 .created(URI.create("/" + appointment.getId()))

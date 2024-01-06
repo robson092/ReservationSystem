@@ -5,6 +5,8 @@ import com.example.reservation.dto.AppointmentFromPatientPovDTO;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,8 +20,10 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotBlank(message = "Name is mandatory.")
     private String name;
 
+    @NotBlank(message = "Surname is mandatory.")
     private String surname;
 
     private String city;
@@ -31,6 +35,7 @@ public class Patient {
     @Column(name = "postal_code")
     private int postalCode;
 
+    @Email(message = "Invalid email.")
     private String email;
     @OneToMany(mappedBy = "patient")
     private Set<Appointment> appointments;

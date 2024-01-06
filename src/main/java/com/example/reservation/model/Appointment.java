@@ -1,15 +1,13 @@
 package com.example.reservation.model;
 
-import com.example.reservation.dto.AppointmentFromPatientPovDTO;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -22,14 +20,16 @@ public class Appointment {
     private int id;
 
     //@NotNull
+    @NotNull(message = "Date is mandatory.")
+    @Future(message = "Date must be in future.")
     private LocalDateTime date;
     @ManyToOne
     @JoinColumn(name = "patient_id")
-    //@JsonIgnore
+    @NotNull
     private Patient patient;
     @ManyToOne
     @JoinColumn(name = "doctor_id")
-    //@JsonIgnore
+    @NotNull
     private Doctor doctor;
 
     public Appointment(Patient patient, Doctor doctor, LocalDateTime date) {
