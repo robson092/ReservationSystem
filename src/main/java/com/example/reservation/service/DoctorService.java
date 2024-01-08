@@ -1,7 +1,7 @@
 package com.example.reservation.service;
 
+import com.example.reservation.dto.DoctorDTO;
 import com.example.reservation.model.Doctor;
-import com.example.reservation.model.Patient;
 import com.example.reservation.repository.DoctorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -16,16 +17,21 @@ public class DoctorService {
 
     private final DoctorRepository repository;
 
-    public Optional<Doctor> getDoctor(Integer id) {
-        return repository.findById(id);
+    public Optional<DoctorDTO> getDoctor(Integer id) {
+        return repository.findById(id)
+                .map(DoctorDTO::new);
     }
 
-    public List<Doctor> getAllDoctor() {
-        return repository.findAll();
+    public List<DoctorDTO> getAllDoctor() {
+        return repository.findAll().stream()
+                .map(DoctorDTO::new)
+                .collect(Collectors.toList());
     }
 
-    public List<Doctor> getAllDoctorsWithPage(Pageable page) {
-        return repository.findAll(page).getContent();
+    public List<DoctorDTO> getAllDoctorsWithPage(Pageable page) {
+        return repository.findAll(page).getContent().stream()
+                .map(DoctorDTO::new)
+                .collect(Collectors.toList());
     }
 
     public Doctor save(Doctor doctor) {

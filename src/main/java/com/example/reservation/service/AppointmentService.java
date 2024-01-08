@@ -17,16 +17,21 @@ public class AppointmentService {
 
     private final AppointmentRepository repository;
 
-    public Optional<Appointment> getAppointment(Integer id) {
-        return repository.findById(id);
+    public Optional<AppointmentDTO> getAppointment(Integer id) {
+        return repository.findById(id)
+                .map(AppointmentDTO::new);
     }
 
-    public List<Appointment> getAllAppointments() {
-        return repository.findAll();
+    public List<AppointmentDTO> getAllAppointments() {
+        return repository.findAll().stream()
+                .map(AppointmentDTO::new)
+                .collect(Collectors.toList());
     }
 
-    public List<Appointment> getAllAppointmentsWithPage(Pageable page) {
-        return repository.findAll(page).getContent();
+    public List<AppointmentDTO> getAllAppointmentsWithPage(Pageable page) {
+        return repository.findAll(page).getContent().stream()
+                .map(AppointmentDTO::new)
+                .collect(Collectors.toList());
     }
 
     public List<AppointmentDTO> getDoneAppointments(boolean done) {

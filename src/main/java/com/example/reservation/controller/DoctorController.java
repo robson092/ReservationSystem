@@ -23,22 +23,17 @@ public class DoctorController {
 
     @GetMapping(params = {"!sort", "!page", "!size"})
     ResponseEntity<List<DoctorDTO>> getAllDoctors() {
-        return ResponseEntity.ok(service.getAllDoctor().stream()
-                .map(DoctorDTO::new)
-                .collect(Collectors.toList()));
+        return ResponseEntity.ok(service.getAllDoctor());
     }
 
     @GetMapping
     ResponseEntity<List<DoctorDTO>> getAllDoctors(Pageable page) {
-        return ResponseEntity.ok(service.getAllDoctorsWithPage(page).stream()
-                .map(DoctorDTO::new)
-                .collect(Collectors.toList()));
+        return ResponseEntity.ok(service.getAllDoctorsWithPage(page));
     }
 
     @GetMapping("/{id}")
     ResponseEntity<DoctorDTO> getDoctor(@PathVariable int id) {
         return service.getDoctor(id)
-                .map(DoctorDTO::new)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
