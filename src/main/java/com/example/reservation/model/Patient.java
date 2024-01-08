@@ -2,6 +2,7 @@ package com.example.reservation.model;
 
 
 import com.example.reservation.dto.AppointmentFromPatientPovDTO;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;

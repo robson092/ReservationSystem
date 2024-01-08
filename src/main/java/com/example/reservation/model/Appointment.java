@@ -1,5 +1,6 @@
 package com.example.reservation.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,11 +27,14 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name = "patient_id")
     @NotNull
+    //@JsonBackReference
     private Patient patient;
     @ManyToOne
     @JoinColumn(name = "doctor_id")
     @NotNull
     private Doctor doctor;
+
+    private boolean done;
 
     public Appointment(Patient patient, Doctor doctor, LocalDateTime date) {
         this.patient = patient;

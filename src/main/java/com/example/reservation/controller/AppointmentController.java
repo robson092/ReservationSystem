@@ -43,6 +43,11 @@ public class AppointmentController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/search/done")
+    ResponseEntity<List<AppointmentDTO>> getDoneAppointment(@RequestParam boolean state) {
+        return ResponseEntity.ok(service.getDoneAppointments(state));
+    }
+
     @PostMapping
     ResponseEntity<Appointment> addAppointment(@Valid @RequestBody Appointment appointmentToCreate) {
         Appointment appointment = service.save(appointmentToCreate);
