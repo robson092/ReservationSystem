@@ -6,7 +6,6 @@ import com.example.reservation.service.AppointmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,22 +22,17 @@ public class AppointmentController {
 
     @GetMapping(params = {"!sort", "!page", "!size"})
     ResponseEntity<List<AppointmentDTO>> getAllAppointments() {
-        return ResponseEntity.ok(service.getAllAppointments().stream()
-                .map(AppointmentDTO::new)
-                .collect(Collectors.toList()));
+        return ResponseEntity.ok(service.getAllAppointments());
     }
 
     @GetMapping
     ResponseEntity<List<AppointmentDTO>> getAllAppointments(Pageable page) {
-        return ResponseEntity.ok(service.getAllAppointmentsWithPage(page).stream()
-                .map(AppointmentDTO::new)
-                .collect(Collectors.toList()));
+        return ResponseEntity.ok(service.getAllAppointmentsWithPage(page));
     }
 
     @GetMapping("/{id}")
     ResponseEntity<AppointmentDTO> getAppointment(@PathVariable int id) {
         return service.getAppointment(id)
-                .map(AppointmentDTO::new)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

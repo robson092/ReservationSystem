@@ -1,34 +1,38 @@
 package com.example.reservation.service;
 
+import com.example.reservation.dto.PatientDTO;
 import com.example.reservation.repository.PatientRepository;
 import com.example.reservation.model.Patient;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PatientService {
 
     private final PatientRepository repository;
 
-    @Autowired
-    public PatientService(PatientRepository repository) {
-        this.repository = repository;
+    public Optional<PatientDTO> getPatient(Integer id) {
+        return repository.findById(id)
+                .map(PatientDTO::new);
     }
 
-    public Optional<Patient> getPatient(Integer id) {
-        return repository.findById(id);
+    public List<PatientDTO> getAllPatients() {
+        return repository.findAll().stream()
+                .map(PatientDTO::new)
+                .collect(Collectors.toList());
     }
 
-    public List<Patient> getAllPatients() {
-        return repository.findAll();
-    }
-
-    public List<Patient> getAllPatientsWithPage(Pageable page) {
-        return repository.findAll(page).getContent();
+    public List<PatientDTO> getAllPatientsWithPage(Pageable page) {
+        return repository.findAll(page).getContent().stream()
+                .map(PatientDTO::new)
+                .collect(Collectors.toList());
     }
 
     public Patient save(Patient patient) {

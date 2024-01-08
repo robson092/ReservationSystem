@@ -22,22 +22,17 @@ public class PatientController {
 
     @GetMapping(params = {"!sort", "!page", "!size"})
     ResponseEntity<List<PatientDTO>> getAllPatients() {
-        return ResponseEntity.ok(patientService.getAllPatients().stream()
-                .map(PatientDTO::new)
-                .collect(Collectors.toList()));
+        return ResponseEntity.ok(patientService.getAllPatients());
     }
 
     @GetMapping
     ResponseEntity<List<PatientDTO>> getAllPatients(Pageable page) {
-        return ResponseEntity.ok(patientService.getAllPatientsWithPage(page).stream()
-                .map(PatientDTO::new)
-                .collect(Collectors.toList()));
+        return ResponseEntity.ok(patientService.getAllPatientsWithPage(page));
     }
 
     @GetMapping("/{id}")
     ResponseEntity<PatientDTO> getPatient(@PathVariable int id) {
         return patientService.getPatient(id)
-                .map(PatientDTO::new)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
