@@ -28,6 +28,6 @@ public class AppointmentDTO {
         this.doctorName = source.getDoctor().getName();
         this.doctorSurname = source.getDoctor().getSurname();
         this.doctorSpecialization = source.getDoctor().getSpecialization();
-        this.done = false;
+        this.done = source.isDone();
     }
 }

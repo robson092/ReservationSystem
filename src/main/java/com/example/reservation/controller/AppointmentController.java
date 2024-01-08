@@ -57,4 +57,10 @@ public class AppointmentController {
         }
         return ResponseEntity.ok(service.deleteAppointment(id));
     }
+
+    @PatchMapping("/{id}")
+    ResponseEntity<?> setAppointmentStatus(@PathVariable int id) {
+        service.setAppointmentDone(id);
+        return ResponseEntity.noContent().build();
+    }
 }
