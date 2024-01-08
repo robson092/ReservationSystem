@@ -52,4 +52,11 @@ public class AppointmentService {
         return repository.existsById(id);
     }
 
+    public void setAppointmentDone(int id) {
+        Appointment appointment = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Appointment not found."));
+        appointment.setDone(true);
+        repository.save(appointment);
+    }
+
 }

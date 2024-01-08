@@ -1,30 +1,25 @@
 package com.example.reservation.exception_handler;
 
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.time.LocalDate;
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class})
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
@@ -34,6 +29,15 @@ public class ControllerExceptionHandler {
         });
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
+
+
+//    @ExceptionHandler(ConstraintViolationException.class)
+//    public ResponseEntity<BadRequestMessage> handle(ConstraintViolationException exception) {
+//        String errorMessage = new ArrayList<>(exception.getConstraintViolations()).get(0).getMessage();
+//        BadRequestMessage error = new BadRequestMessage(LocalDateTime.now(), errorMessage);
+//        return new ResponseEntity<>(error, null, HttpStatus.BAD_REQUEST);
+//    }
+
 
 
 
