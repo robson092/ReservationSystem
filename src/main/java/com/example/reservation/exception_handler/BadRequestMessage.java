@@ -3,7 +3,6 @@ package com.example.reservation.exception_handler;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter

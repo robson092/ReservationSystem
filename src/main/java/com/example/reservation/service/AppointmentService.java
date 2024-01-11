@@ -18,6 +18,9 @@ public class AppointmentService {
     private final AppointmentRepository repository;
 
     public Optional<AppointmentDTO> getAppointment(Integer id) {
+        if (!repository.existsById(id)) {
+            throw new IllegalArgumentException("Appointment not found");
+        }
         return repository.findById(id)
                 .map(AppointmentDTO::new);
     }
@@ -45,6 +48,9 @@ public class AppointmentService {
     }
 
     public Optional<Appointment> deleteAppointment(int id) {
+        if (!repository.existsById(id)) {
+            throw new IllegalArgumentException("Appointment not found");
+        }
         return repository.deleteById(id);
     }
 
