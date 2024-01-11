@@ -1,6 +1,7 @@
 package com.example.reservation.controller;
 
 import com.example.reservation.dto.PatientDTO;
+import com.example.reservation.exception_handler.CannotDeleteException;
 import com.example.reservation.service.PatientService;
 import com.example.reservation.model.Patient;
 import lombok.RequiredArgsConstructor;
@@ -46,10 +47,7 @@ public class PatientController {
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<?> deletePatient(@PathVariable int id) {
-        if(!patientService.isPatientExist(id)) {
-            ResponseEntity.notFound().build();
-        }
+    ResponseEntity<?> deletePatient(@PathVariable int id) throws CannotDeleteException {
         return ResponseEntity.ok(patientService.deletePatient(id));
     }
 }
