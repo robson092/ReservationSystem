@@ -20,7 +20,6 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    //@NotNull
     @NotNull(message = "Date is mandatory.")
     @Future(message = "Date must be in future.")
     private LocalDateTime date;

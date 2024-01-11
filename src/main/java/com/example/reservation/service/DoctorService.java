@@ -2,7 +2,9 @@ package com.example.reservation.service;
 
 import com.example.reservation.dto.AppointmentFromDoctorPovDTO;
 import com.example.reservation.dto.DoctorDTO;
+import com.example.reservation.dto.DoctorUpdateDTO;
 import com.example.reservation.exception_handler.CannotDeleteException;
+import com.example.reservation.mapper.DoctorMapper;
 import com.example.reservation.model.Appointment;
 import com.example.reservation.model.Doctor;
 import com.example.reservation.repository.DoctorRepository;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 public class DoctorService {
 
     private final DoctorRepository repository;
+    private final DoctorMapper mapper;
 
     public Optional<DoctorDTO> getDoctor(Integer id) {
         if (!repository.existsById(id)) {
@@ -64,6 +67,13 @@ public class DoctorService {
 
     public boolean isDoctorExist(Integer id) {
         return repository.existsById(id);
+    }
+
+    public void updateDoctor(Integer id, DoctorUpdateDTO doctorDTO) {
+        Doctor doctor = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Doctor not found."));
+        mapper.updateDoctorFromDto(doctorDTO, doctor);
+        repository.save(doctor);
     }
 
 }
