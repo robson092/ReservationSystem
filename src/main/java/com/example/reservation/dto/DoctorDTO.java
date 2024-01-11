@@ -7,10 +7,10 @@ import java.util.Set;
 
 @Getter
 public class DoctorDTO {
-    private int id;
-    private String name;
-    private String surname;
-    private String specialization;
+    private final int id;
+    private final String name;
+    private final String surname;
+    private final String specialization;
     private final Set<AppointmentFromDoctorPovDTO> appointments;
 
     public DoctorDTO(Doctor source) {

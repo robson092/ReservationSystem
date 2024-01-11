@@ -1,14 +1,13 @@
 package com.example.reservation.service;
 
-import com.example.reservation.dto.AppointmentFromDoctorPovDTO;
 import com.example.reservation.dto.AppointmentFromPatientPovDTO;
 import com.example.reservation.dto.PatientDTO;
+import com.example.reservation.dto.PatientUpdateDTO;
 import com.example.reservation.exception_handler.CannotDeleteException;
-import com.example.reservation.model.Appointment;
+import com.example.reservation.mapper.PatientMapper;
 import com.example.reservation.repository.PatientRepository;
 import com.example.reservation.model.Patient;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +22,7 @@ import java.util.stream.Collectors;
 public class PatientService {
 
     private final PatientRepository repository;
+    private final PatientMapper mapper;
 
     public Optional<PatientDTO> getPatient(Integer id) {
         if (!repository.existsById(id)) {
@@ -50,7 +50,7 @@ public class PatientService {
 
     public Optional<Patient> deletePatient(int id) throws CannotDeleteException {
         if (!isPatientExist(id)) {
-            throw new IllegalArgumentException("Patient not found");
+            throw new IllegalArgumentException("Patient not found.");
         }
         PatientDTO patient = getPatient(id).orElse(null);
         Set<AppointmentFromPatientPovDTO> appointments = Optional.ofNullable(patient.getAppointments())
@@ -68,5 +68,11 @@ public class PatientService {
         return repository.existsById(id);
     }
 
+    public void updatePatient(Integer id, PatientUpdateDTO patientDTO) {
+        Patient patient = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Patient not found."));
+        mapper.updatePatientFromDto(patientDTO, patient);
+        repository.save(patient);
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.example.reservation.controller;
 
 import com.example.reservation.dto.PatientDTO;
+import com.example.reservation.dto.PatientUpdateDTO;
 import com.example.reservation.exception_handler.CannotDeleteException;
 import com.example.reservation.service.PatientService;
 import com.example.reservation.model.Patient;
@@ -49,5 +50,11 @@ public class PatientController {
     @DeleteMapping("/{id}")
     ResponseEntity<?> deletePatient(@PathVariable int id) throws CannotDeleteException {
         return ResponseEntity.ok(patientService.deletePatient(id));
+    }
+
+    @PutMapping("/{id}")
+    ResponseEntity<?> updatePatient(@PathVariable int id, @RequestBody PatientUpdateDTO patientDto) {
+        patientService.updatePatient(id, patientDto);
+        return ResponseEntity.noContent().build();
     }
 }
