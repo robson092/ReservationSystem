@@ -2,8 +2,10 @@ package com.example.reservation.controller;
 
 import com.example.reservation.dto.DoctorDTO;
 import com.example.reservation.dto.DoctorUpdateDTO;
+import com.example.reservation.enums.SpecializationEnum;
 import com.example.reservation.exception_handler.CannotDeleteException;
 import com.example.reservation.model.Doctor;
+import com.example.reservation.model.Specialization;
 import com.example.reservation.service.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +40,11 @@ public class DoctorController {
         return service.getDoctor(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/specializations")
+    ResponseEntity<List<DoctorDTO>> getDoctorsBySpecialization(@RequestParam("value") String specialization) {
+        return ResponseEntity.ok(service.findBySpecializations(specialization));
     }
 
     @PostMapping

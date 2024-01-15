@@ -1,18 +1,14 @@
 package com.example.reservation.repository;
 
 import com.example.reservation.enums.SpecializationEnum;
-import com.example.reservation.model.Doctor;
 import com.example.reservation.model.Specialization;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface DoctorRepository extends JpaRepository<Doctor, Integer> {
+public interface SpecializationRepository extends JpaRepository<Specialization, Integer> {
 
-    Optional<Doctor> deleteById(int id);
-    List<Doctor> findBySpecializations(SpecializationEnum specializationType);
-
+    List<Specialization> findBySpecializationType(SpecializationEnum specializationType);
 }
