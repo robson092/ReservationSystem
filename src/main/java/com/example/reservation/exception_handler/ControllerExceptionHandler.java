@@ -3,6 +3,7 @@ package com.example.reservation.exception_handler;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -44,5 +45,11 @@ public class ControllerExceptionHandler {
     public ResponseEntity<?> handleIllegalArgument(IllegalArgumentException ex, HandlerMethod handlerMethod) {
         BadRequestMessage badRequestMessage = new BadRequestMessage(LocalDateTime.now(), ex.getMessage());
         return new ResponseEntity<>(badRequestMessage, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<?> handleInvalidSpecialization(HttpMessageNotReadableException ex) {
+        BadRequestMessage badRequestMessage = new BadRequestMessage(LocalDateTime.now(), ex.getMessage());
+        return new ResponseEntity<>(badRequestMessage, HttpStatus.BAD_REQUEST);
     }
 }

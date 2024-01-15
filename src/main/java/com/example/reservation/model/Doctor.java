@@ -1,12 +1,16 @@
 package com.example.reservation.model;
 
 import com.example.reservation.dto.AppointmentFromDoctorPovDTO;
+import com.example.reservation.dto.SpecializationFromDoctorPovDTO;
+import com.example.reservation.enums.SpecializationEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,16 +26,26 @@ public class Doctor {
     private String name;
     @NotBlank(message = "Surname is mandatory.")
     private String surname;
-    private String specialization;
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(
+            name = "doctor_specialization",
+            joinColumns = {@JoinColumn(name = "doctor_id")},
+            inverseJoinColumns = {@JoinColumn(name = "specialization_id")}
+    )
+    @NotEmpty
+    private Set<Specialization> specializations;
     @OneToMany(mappedBy = "doctor")
     private Set<Appointment> appointments;
 
 
 
-    public Doctor(String name, String surname, String specialization) {
+    public Doctor(String name, String surname, Set<Specialization> specialization) {
         this.name = name;
         this.surname = surname;
-        this.specialization = specialization;
+        this.specializations = specialization;
 
     }
 
@@ -41,13 +55,33 @@ public class Doctor {
                 .collect(Collectors.toSet());
     }
 
+    public Set<SpecializationFromDoctorPovDTO> getSpecializationsForDoctorDTO(Set<Specialization> specializations) {
+        return specializations.stream()
+                .map(SpecializationFromDoctorPovDTO::new)
+                .collect(Collectors.toSet());
+    }
+
     @Override
     public String toString() {
         return "Doctor{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
-                ", specialization='" + specialization + '\'' +
+                ", specializations=" + specializations +
+                ", appointments=" + appointments +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Doctor)) return false;
+        Doctor doctor = (Doctor) o;
+        return id == doctor.id && Objects.equals(name, doctor.name) && Objects.equals(surname, doctor.surname) && Objects.equals(specializations, doctor.specializations) && Objects.equals(appointments, doctor.appointments);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, surname, specializations, appointments);
     }
 }
