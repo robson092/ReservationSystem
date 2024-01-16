@@ -1,20 +1,20 @@
 package com.example.reservation.dto;
 
-import com.example.reservation.enums.SpecializationEnum;
 import com.example.reservation.model.Doctor;
-import com.example.reservation.model.Specialization;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Set;
 
 @Getter
+@Setter
 public class DoctorDTO {
-    private final int id;
-    private final String name;
-    private final String surname;
-    private final Set<SpecializationFromDoctorPovDTO> specialization;
-    private final Set<AppointmentFromDoctorPovDTO> appointments;
-    private final Set<HospitalFromDoctorPovDTO> hospitals;
+    private int id;
+    private String name;
+    private String surname;
+    private Set<SpecializationFromDoctorPovDTO> specialization;
+    private Set<AppointmentFromDoctorPovDTO> appointments;
+    private Set<HospitalFromDoctorPovDTO> hospitals;
 
     public DoctorDTO(Doctor source) {
         this.id = source.getId();

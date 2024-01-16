@@ -14,12 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +46,15 @@ public class DoctorService {
     }
 
     public Doctor save(Doctor doctor) {
+        Set<Specialization> requestedSpecializations = doctor.getSpecializations();
+        Set<Specialization> specializations = requestedSpecializations.stream()
+                .map(specialization -> specializationRepository
+                        .findBySpecializationType(specialization.getSpecializationType())
+                        .orElse(null))
+                .collect(Collectors.toSet());
+        if (!specializations.contains(null)) {
+            doctor.setSpecializations(specializations);
+        }
         return doctorRepository.save(doctor);
     }
 
@@ -82,7 +87,7 @@ public class DoctorService {
 
     public List<DoctorDTO> findBySpecializations(String specialization) {
         SpecializationEnum specializationEnum = SpecializationEnum.valueOf(specialization.toUpperCase());
-        List<Specialization> specializations = specializationRepository.findBySpecializationType(specializationEnum);
+        List<Specialization> specializations = specializationRepository.findAllBySpecializationType(specializationEnum);
         return specializations.stream()
                 .map(Specialization::getDoctors)
                 .flatMap(doctors -> doctors
