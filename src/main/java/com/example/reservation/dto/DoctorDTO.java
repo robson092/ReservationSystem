@@ -14,6 +14,7 @@ public class DoctorDTO {
     private final String surname;
     private final Set<SpecializationFromDoctorPovDTO> specialization;
     private final Set<AppointmentFromDoctorPovDTO> appointments;
+    private final Set<HospitalFromDoctorPovDTO> hospitals;
 
     public DoctorDTO(Doctor source) {
         this.id = source.getId();
@@ -21,5 +22,6 @@ public class DoctorDTO {
         this.surname = source.getSurname();
         this.specialization = source.getSpecializationsForDoctorDTO(source.getSpecializations());
         this.appointments = source.getAppointmentsForDoctorDTO(source.getAppointments());
+        this.hospitals = source.getHospitalForDoctorDTO(source.getHospitalAffiliations());
     }
 }

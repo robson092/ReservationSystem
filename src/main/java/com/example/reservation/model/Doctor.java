@@ -1,11 +1,12 @@
 package com.example.reservation.model;
 
 import com.example.reservation.dto.AppointmentFromDoctorPovDTO;
+import com.example.reservation.dto.HospitalFromDoctorPovDTO;
 import com.example.reservation.dto.SpecializationFromDoctorPovDTO;
-import com.example.reservation.enums.SpecializationEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -40,12 +41,16 @@ public class Doctor {
     @OneToMany(mappedBy = "doctor")
     private Set<Appointment> appointments;
 
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinColumn(name = "doctor_id")
+    private Set<HospitalAffiliation> hospitalAffiliations;
 
-
-    public Doctor(String name, String surname, Set<Specialization> specialization) {
+    public Doctor(String name, String surname, Set<Specialization> specialization,
+                  Set<HospitalAffiliation> hospitalAffiliations) {
         this.name = name;
         this.surname = surname;
         this.specializations = specialization;
+        this.hospitalAffiliations = hospitalAffiliations;
 
     }
 
@@ -58,6 +63,12 @@ public class Doctor {
     public Set<SpecializationFromDoctorPovDTO> getSpecializationsForDoctorDTO(Set<Specialization> specializations) {
         return specializations.stream()
                 .map(SpecializationFromDoctorPovDTO::new)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<HospitalFromDoctorPovDTO> getHospitalForDoctorDTO(Set<HospitalAffiliation> hospitalAffiliations) {
+        return hospitalAffiliations.stream()
+                .map(HospitalFromDoctorPovDTO::new)
                 .collect(Collectors.toSet());
     }
 
