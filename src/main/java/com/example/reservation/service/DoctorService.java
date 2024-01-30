@@ -3,14 +3,18 @@ package com.example.reservation.service;
 import com.example.reservation.dto.AppointmentFromDoctorPovDTO;
 import com.example.reservation.dto.DoctorDTO;
 import com.example.reservation.dto.DoctorUpdateDTO;
+import com.example.reservation.dto.SpecializationFromDoctorPovDTO;
 import com.example.reservation.enums.SpecializationEnum;
 import com.example.reservation.exception_handler.CannotDeleteException;
 import com.example.reservation.mapper.DoctorMapper;
 import com.example.reservation.model.Doctor;
+import com.example.reservation.model.HospitalAffiliation;
 import com.example.reservation.model.Specialization;
 import com.example.reservation.repository.DoctorRepository;
+import com.example.reservation.repository.HospitalAffiliationRepository;
 import com.example.reservation.repository.SpecializationRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +27,9 @@ public class DoctorService {
 
     private final DoctorRepository doctorRepository;
     private final SpecializationRepository specializationRepository;
+    private final HospitalAffiliationRepository hospitalAffiliationRepository;
     private final DoctorMapper mapper;
+    private final ModelMapper modelMapper;
 
     public Optional<DoctorDTO> getDoctor(Integer id) {
         if (!doctorRepository.existsById(id)) {
@@ -45,17 +51,18 @@ public class DoctorService {
                 .collect(Collectors.toList());
     }
 
-    public Doctor save(Doctor doctor) {
-        Set<Specialization> requestedSpecializations = doctor.getSpecializations();
-        Set<Specialization> specializations = requestedSpecializations.stream()
-                .map(specialization -> specializationRepository
-                        .findBySpecializationType(specialization.getSpecializationType())
-                        .orElse(null))
-                .collect(Collectors.toSet());
-        if (!specializations.contains(null)) {
+    public DoctorDTO save(DoctorDTO doctorDto) {
+        Doctor doctor = modelMapper.map(doctorDto, Doctor.class);
+        Set<Specialization> specializations = setSpecializationIfAlreadyExists(doctor);
+        if(!specializations.contains(null)) {
             doctor.setSpecializations(specializations);
         }
-        return doctorRepository.save(doctor);
+        Set<HospitalAffiliation> hospitalAffiliations = setHospitalAffiliationIfAlreadyExists(doctor);
+        if (!hospitalAffiliations.contains(null)) {
+            doctor.setHospitalAffiliations(hospitalAffiliations);
+        }
+        Doctor savedDoctor = doctorRepository.save(doctor);
+        return modelMapper.map(savedDoctor, DoctorDTO.class);
     }
 
     public Optional<Doctor> deleteDoctor(int id) throws CannotDeleteException {
@@ -94,6 +101,25 @@ public class DoctorService {
                         .stream()
                         .map(DoctorDTO::new))
                 .collect(Collectors.toList());
+    }
+
+    private Set<Specialization> setSpecializationIfAlreadyExists(Doctor doctor) {
+        Set<Specialization> requestedSpecializations = doctor.getSpecializations();
+        return requestedSpecializations.stream()
+                .map(specialization -> specializationRepository
+                        .findBySpecializationType(specialization.getSpecializationType())
+                        .orElse(null))
+                .collect(Collectors.toSet());
+    }
+
+    private Set<HospitalAffiliation> setHospitalAffiliationIfAlreadyExists(Doctor doctor) {
+        Set<HospitalAffiliation> requestedHospitalAffiliations = doctor.getHospitalAffiliations();
+        return requestedHospitalAffiliations.stream()
+                .map(hospitalAffiliation -> hospitalAffiliationRepository.findByHospitalNameAndCity(
+                        hospitalAffiliation.getHospitalName(), hospitalAffiliation.getCity())
+                        .orElse(null))
+                .collect(Collectors.toSet());
+
     }
 
 }

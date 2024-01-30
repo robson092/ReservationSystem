@@ -1,14 +1,19 @@
 package com.example.reservation.dto;
 
+import com.example.reservation.enums.SpecializationEnum;
 import com.example.reservation.model.Specialization;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-@Getter
+@Getter @Setter
+@RequiredArgsConstructor
 public class SpecializationFromDoctorPovDTO {
 
-    private final String specialization;
+    private SpecializationEnum specializationType;
+
 
     public SpecializationFromDoctorPovDTO(Specialization source) {
-        this.specialization = source.getSpecializationType().getSpecialization();
+        this.specializationType = source.getSpecializationType();
     }
 }
