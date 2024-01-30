@@ -48,8 +48,8 @@ public class DoctorController {
     }
 
     @PostMapping
-    ResponseEntity<Doctor> addDoctor(@Valid @RequestBody Doctor doctorToCreate) {
-        Doctor doctor = service.save(doctorToCreate);
+    ResponseEntity<DoctorDTO> addDoctor(@Valid @RequestBody DoctorDTO doctorDto) {
+        DoctorDTO doctor = service.save(doctorDto);
         return ResponseEntity
                 .created(URI.create("/" + doctor.getId()))
                 .body(doctor);

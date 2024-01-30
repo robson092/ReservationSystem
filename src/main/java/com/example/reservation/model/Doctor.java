@@ -41,8 +41,16 @@ public class Doctor {
     @OneToMany(mappedBy = "doctor")
     private Set<Appointment> appointments;
 
-    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctor_id")
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(
+            name = "doctor_hospital_affiliations",
+            joinColumns = {@JoinColumn(name = "doctor_id")},
+            inverseJoinColumns = {@JoinColumn(name = "hospital_affiliations_id")}
+    )
+    @NotEmpty
     private Set<HospitalAffiliation> hospitalAffiliations;
 
     public Doctor(String name, String surname, Set<Specialization> specialization,
