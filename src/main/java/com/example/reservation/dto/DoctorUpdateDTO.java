@@ -14,5 +14,5 @@ public class DoctorUpdateDTO {
     private final int id;
     private final String name;
     private final String surname;
-    private final Set<Specialization> specialization;
+    private final Set<Specialization> specializations;
 }
