@@ -2,28 +2,23 @@ package com.example.reservation.controller;
 
 import com.example.reservation.dto.DoctorDTO;
 import com.example.reservation.dto.DoctorUpdateDTO;
-import com.example.reservation.enums.SpecializationEnum;
 import com.example.reservation.exception_handler.CannotDeleteException;
-import com.example.reservation.model.Doctor;
-import com.example.reservation.model.Specialization;
-import com.example.reservation.service.DoctorService;
+import com.example.reservation.service.DoctorServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/doctors")
 public class DoctorController {
 
-    private final DoctorService service;
+    private final DoctorServiceImpl service;
 
     @GetMapping(params = {"!sort", "!page", "!size"})
     ResponseEntity<List<DoctorDTO>> getAllDoctors() {
@@ -44,7 +39,7 @@ public class DoctorController {
 
     @GetMapping("/specializations")
     ResponseEntity<List<DoctorDTO>> getDoctorsBySpecialization(@RequestParam("value") String specialization) {
-        return ResponseEntity.ok(service.findBySpecializations(specialization));
+        return ResponseEntity.ok(service.getDoctorBySpecialization(specialization));
     }
 
     @PostMapping
