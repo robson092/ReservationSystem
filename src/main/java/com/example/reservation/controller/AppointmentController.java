@@ -2,7 +2,7 @@ package com.example.reservation.controller;
 
 import com.example.reservation.dto.AppointmentDTO;
 import com.example.reservation.model.Appointment;
-import com.example.reservation.service.AppointmentService;
+import com.example.reservation.service.AppointmentServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -11,14 +11,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/appointments")
 public class AppointmentController {
 
-    private final AppointmentService service;
+    private final AppointmentServiceImpl service;
 
     @GetMapping(params = {"!sort", "!page", "!size"})
     ResponseEntity<List<AppointmentDTO>> getAllAppointments() {
