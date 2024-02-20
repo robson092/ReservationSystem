@@ -6,6 +6,7 @@ import com.example.reservation.dto.DoctorUpdateDTO;
 import com.example.reservation.enums.SpecializationEnum;
 import com.example.reservation.exception_handler.CannotDeleteException;
 import com.example.reservation.mapper.DoctorMapper;
+import com.example.reservation.mapper.DoctorUpdateMapper;
 import com.example.reservation.model.Doctor;
 import com.example.reservation.model.HospitalAffiliation;
 import com.example.reservation.model.Specialization;
@@ -13,7 +14,6 @@ import com.example.reservation.repository.DoctorRepository;
 import com.example.reservation.repository.HospitalAffiliationRepository;
 import com.example.reservation.repository.SpecializationRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -27,35 +27,37 @@ public class DoctorServiceImpl implements DoctorService {
     private final DoctorRepository doctorRepository;
     private final SpecializationRepository specializationRepository;
     private final HospitalAffiliationRepository hospitalAffiliationRepository;
+    private final DoctorUpdateMapper updateMapper;
     private final DoctorMapper mapper;
-    private final ModelMapper modelMapper;
 
     @Override
     public Optional<DoctorDTO> getDoctor(Integer id) {
         if (!doctorRepository.existsById(id)) {
             throw new IllegalArgumentException("Doctor not found");
         }
-        return doctorRepository.findById(id)
-                .map(DoctorDTO::new);
+        Doctor doctor = doctorRepository.findById(id).get();
+        return Optional.ofNullable(mapper.mapToDto(doctor));
     }
 
     @Override
     public List<DoctorDTO> getAllDoctor() {
-        return doctorRepository.findAll().stream()
-                .map(DoctorDTO::new)
+        ArrayList<Doctor> doctors = new ArrayList<>(doctorRepository.findAll());
+        return doctors.stream()
+                .map(mapper::mapToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<DoctorDTO> getAllDoctorsWithPage(Pageable page) {
-        return doctorRepository.findAll(page).getContent().stream()
-                .map(DoctorDTO::new)
+        ArrayList<Doctor> doctors = new ArrayList<>(doctorRepository.findAll(page).getContent());
+        return doctors.stream()
+                .map(mapper::mapToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public DoctorDTO save(DoctorDTO doctorDto) {
-        Doctor doctor = modelMapper.map(doctorDto, Doctor.class);
+        Doctor doctor = mapper.mapToEntity(doctorDto);
         Set<Specialization> specializations = setSpecializationIfAlreadyExists(doctor);
         if(!specializations.contains(null)) {
             doctor.setSpecializations(specializations);
@@ -65,7 +67,7 @@ public class DoctorServiceImpl implements DoctorService {
             doctor.setHospitalAffiliations(hospitalAffiliations);
         }
         Doctor savedDoctor = doctorRepository.save(doctor);
-        return modelMapper.map(savedDoctor, DoctorDTO.class);
+        return mapper.mapToDto(savedDoctor);
     }
 
     @Override
@@ -93,7 +95,7 @@ public class DoctorServiceImpl implements DoctorService {
     public void updateDoctor(Integer id, DoctorUpdateDTO doctorDTO) {
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Doctor not found."));
-        mapper.updateDoctorFromDto(doctorDTO, doctor);
+        updateMapper.updateDoctorFromDto(doctorDTO, doctor);
         doctorRepository.save(doctor);
     }
 
@@ -103,9 +105,8 @@ public class DoctorServiceImpl implements DoctorService {
         List<Specialization> specializations = specializationRepository.findAllBySpecializationType(specializationEnum);
         return specializations.stream()
                 .map(Specialization::getDoctors)
-                .flatMap(doctors -> doctors
-                        .stream()
-                        .map(DoctorDTO::new))
+                .flatMap(doctors -> doctors.stream()
+                        .map(mapper::mapToDto))
                 .collect(Collectors.toList());
     }
 

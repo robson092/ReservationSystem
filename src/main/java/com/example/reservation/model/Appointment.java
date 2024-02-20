@@ -1,16 +1,17 @@
 package com.example.reservation.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter @Setter
+@Builder
 @Entity
 @Table(name = "appointments", uniqueConstraints = {@UniqueConstraint(columnNames = {"date", "doctor_id"})})
 public class Appointment {
@@ -32,12 +33,6 @@ public class Appointment {
 
     private boolean done;
 
-    public Appointment(Patient patient, Doctor doctor, LocalDateTime date) {
-        this.patient = patient;
-        this.doctor = doctor;
-        this.date = date;
-    }
-
 
     @Override
     public String toString() {
@@ -46,5 +41,18 @@ public class Appointment {
                 ", patient=" + patient +
                 ", doctor=" + doctor +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Appointment)) return false;
+        Appointment that = (Appointment) o;
+        return id == that.id && Objects.equals(date, that.date) && Objects.equals(patient, that.patient) && Objects.equals(doctor, that.doctor);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, date, patient, doctor);
     }
 }

@@ -39,8 +39,8 @@ public class PatientController {
     }
 
     @PostMapping
-    ResponseEntity<Patient> addPatient(@Valid @RequestBody Patient patientToCreate) {
-        Patient patient = patientService.save(patientToCreate);
+    ResponseEntity<PatientDTO> addPatient(@Valid @RequestBody PatientDTO patientDTO) {
+        PatientDTO patient = patientService.save(patientDTO);
         return ResponseEntity
                 .created(URI.create("/" + patient.getId()))
                 .body(patient);

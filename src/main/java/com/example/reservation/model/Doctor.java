@@ -3,10 +3,7 @@ package com.example.reservation.model;
 import com.example.reservation.dto.AppointmentFromDoctorPovDTO;
 import com.example.reservation.dto.HospitalFromDoctorPovDTO;
 import com.example.reservation.dto.SpecializationFromDoctorPovDTO;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
@@ -17,7 +14,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Getter @Setter
+@Builder
 @Entity
 @Table(name = "doctors", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "surname"})})
 public class Doctor {
@@ -53,15 +52,6 @@ public class Doctor {
     )
     @NotEmpty
     private Set<HospitalAffiliation> hospitalAffiliations;
-
-    public Doctor(String name, String surname, Set<Specialization> specialization,
-                  Set<HospitalAffiliation> hospitalAffiliations) {
-        this.name = name;
-        this.surname = surname;
-        this.specializations = specialization;
-        this.hospitalAffiliations = hospitalAffiliations;
-
-    }
 
     public Set<AppointmentFromDoctorPovDTO> getAppointmentsForDoctorDTO(Set<Appointment> appointments) {
         return appointments.stream()

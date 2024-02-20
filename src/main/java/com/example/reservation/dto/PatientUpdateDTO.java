@@ -1,23 +1,25 @@
 package com.example.reservation.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
+@Setter
+@EqualsAndHashCode
 @AllArgsConstructor
+@NoArgsConstructor
 public class PatientUpdateDTO {
-    private final int id;
+    private int id;
 
-    private final String name;
+    private String name;
 
-    private final String surname;
+    private String surname;
 
-    private final String city;
-    private final String street;
+    private String city;
+    private String street;
 
-    private final int streetNum;
+    private int streetNum;
 
-    private final int postalCode;
+    private int postalCode;
 
-    private final String email;
+    private String email;
 }

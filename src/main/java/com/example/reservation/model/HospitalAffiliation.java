@@ -19,11 +19,11 @@ public class HospitalAffiliation {
     private int id;
 
     @Column(name = "hospital_name")
-    private String hospitalName;
+    private final String hospitalName;
 
-    private String city;
+    private final String city;
 
-    private String street;
+    private final String street;
 
     @Column(name = "time_slot_per_client_in_min")
     private int timeSlotPerClientInMinute;

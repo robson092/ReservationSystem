@@ -42,8 +42,8 @@ public class AppointmentController {
     }
 
     @PostMapping
-    ResponseEntity<Appointment> addAppointment(@Valid @RequestBody Appointment appointmentToCreate) {
-        Appointment appointment = service.save(appointmentToCreate);
+    ResponseEntity<AppointmentDTO> addAppointment(@Valid @RequestBody AppointmentDTO appointmentDTO) {
+        AppointmentDTO appointment = service.save(appointmentDTO);
         return ResponseEntity
                 .created(URI.create("/" + appointment.getId()))
                 .body(appointment);
