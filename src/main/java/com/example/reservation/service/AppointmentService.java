@@ -13,7 +13,7 @@ public interface AppointmentService {
     List<AppointmentDTO> getAllAppointments();
     List<AppointmentDTO> getAllAppointmentsWithPage(Pageable page);
     List<AppointmentDTO> getDoneAppointments(boolean done);
-    Appointment save(Appointment appointment);
+    AppointmentDTO save(AppointmentDTO appointmentDTO);
     Optional<Appointment> deleteAppointment(int id);
     boolean isAppointmentExist(Integer id);
     void setAppointmentDone(int id);

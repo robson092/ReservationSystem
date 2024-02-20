@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -19,8 +20,21 @@ public class Specialization {
     private int id;
 
     @Column
-    private SpecializationEnum specializationType;
+    private final SpecializationEnum specializationType;
 
     @ManyToMany(mappedBy = "specializations")
     private Set<Doctor> doctors ;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Specialization)) return false;
+        Specialization that = (Specialization) o;
+        return id == that.id && specializationType == that.specializationType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, specializationType);
+    }
 }

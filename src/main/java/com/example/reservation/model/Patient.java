@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "patients", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "surname"})})
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

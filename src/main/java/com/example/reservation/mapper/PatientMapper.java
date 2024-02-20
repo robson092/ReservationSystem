@@ -1,15 +1,35 @@
 package com.example.reservation.mapper;
 
-import com.example.reservation.dto.PatientUpdateDTO;
+import com.example.reservation.dto.PatientDTO;
 import com.example.reservation.model.Patient;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface PatientMapper {
+@Component
+public class PatientMapper {
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updatePatientFromDto(PatientUpdateDTO dto, @MappingTarget Patient entity);
+    public PatientDTO mapToDto(Patient patient) {
+        return PatientDTO.builder()
+                .id(patient.getId())
+                .name(patient.getName())
+                .surname(patient.getSurname())
+                .city(patient.getCity())
+                .street(patient.getStreet())
+                .streetNum(patient.getStreetNum())
+                .postalCode(patient.getPostalCode())
+                .email(patient.getEmail())
+                .appointments(patient.getAppointmentsForPatientDTO(patient.getAppointments()))
+                .build();
+    }
+
+    public Patient mapToEntity(PatientDTO dto) {
+        return Patient.builder()
+                .name(dto.getName())
+                .surname(dto.getSurname())
+                .city(dto.getCity())
+                .street(dto.getStreet())
+                .streetNum(dto.getStreetNum())
+                .postalCode(dto.getPostalCode())
+                .email(dto.getEmail())
+                .build();
+    }
 }

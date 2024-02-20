@@ -14,7 +14,7 @@ public interface PatientService {
     Optional<PatientDTO> getPatient(Integer id);
     List<PatientDTO> getAllPatients();
     List<PatientDTO> getAllPatientsWithPage(Pageable page);
-    Patient save(Patient patient);
+    PatientDTO save(PatientDTO patientDTO);
     Optional<Patient> deletePatient(int id) throws CannotDeleteException;
     boolean isPatientExist(Integer id);
     void updatePatient(Integer id, PatientUpdateDTO patientDTO);
