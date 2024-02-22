@@ -1,8 +1,7 @@
 package com.example.reservation.model;
 
 
-import com.example.reservation.dto.AppointmentFromPatientPovDTO;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.example.reservation.dto.AppointmentFromPatientViewDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -51,12 +50,6 @@ public class Patient {
         this.streetNum = streetNum;
         this.postalCode = postalCode;
         this.email = email;
-    }
-
-    public Set<AppointmentFromPatientPovDTO> getAppointmentsForPatientDTO(Set<Appointment> appointments) {
-        return appointments.stream()
-                .map(AppointmentFromPatientPovDTO::new)
-                .collect(Collectors.toSet());
     }
 
     @Override

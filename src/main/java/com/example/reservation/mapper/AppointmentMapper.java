@@ -1,9 +1,14 @@
 package com.example.reservation.mapper;
 
 import com.example.reservation.dto.AppointmentDTO;
+import com.example.reservation.dto.AppointmentFromDoctorViewDTO;
 import com.example.reservation.model.Appointment;
+import com.example.reservation.model.Doctor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor

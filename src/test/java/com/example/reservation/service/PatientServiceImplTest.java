@@ -56,7 +56,7 @@ class PatientServiceImplTest {
 
     @Test
     @DisplayName("Should return patient when getPatient invoke")
-    void when_getPatient_should_return_patient() {
+    void when_getPatient_with_correct_id_should_return_patient() {
         patient.setId(1);
 
         when(mockPatientRepo.findById(1)).thenReturn(Optional.of(patient));
@@ -106,6 +106,8 @@ class PatientServiceImplTest {
     @Test
     @DisplayName("Should return patient when save invoke")
     void when_save_then_return_patient() {
+        patientDTO.setId(1);
+        patient.setId(1);
         when(mockPatientRepo.save(patient)).thenAnswer(i -> i.getArguments()[0]);
         when(mockPatientMapper.mapToDto(patient)).thenReturn(patientDTO);
         when(mockPatientMapper.mapToEntity(patientDTO)).thenReturn(patient);
@@ -121,7 +123,6 @@ class PatientServiceImplTest {
     void when_deletePatient_with_correct_id_then_delete() throws CannotDeleteException {
         patient.setId(1);
 
-        when(mockPatientRepo.existsById(patient.getId())).thenReturn(true);
         when(mockPatientRepo.findById(patient.getId())).thenReturn(Optional.of(patient));
         patientService.deletePatient(patient.getId());
 
@@ -131,9 +132,9 @@ class PatientServiceImplTest {
     @Test
     @DisplayName("Should throw illegalArgumentException when incorrect id provided")
     void when_deletePatient_with_incorrect_id_then_throw_illegalArgumentException() {
-        when(mockPatientRepo.existsById(1)).thenReturn(false);
+        when(mockPatientRepo.findById(1)).thenReturn(Optional.ofNullable(null));
         assertThrows(IllegalArgumentException.class, () -> patientService.deletePatient(1));
-        verify(mockPatientRepo).existsById(1);
+        verify(mockPatientRepo).findById(1);
     }
 
     @Test
@@ -142,7 +143,6 @@ class PatientServiceImplTest {
         patient.setAppointments(Set.of(new Appointment()));
         patient.setId(1);
 
-        when(mockPatientRepo.existsById(patient.getId())).thenReturn(true);
         when(mockPatientRepo.findById(patient.getId())).thenReturn(Optional.of(patient));
 
         assertThrows(CannotDeleteException.class, () -> patientService.deletePatient(patient.getId()));

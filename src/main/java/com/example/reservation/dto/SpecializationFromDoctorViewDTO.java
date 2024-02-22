@@ -8,12 +8,12 @@ import lombok.Setter;
 
 @Getter @Setter
 @RequiredArgsConstructor
-public class SpecializationFromDoctorPovDTO {
+public class SpecializationFromDoctorViewDTO {
 
     private SpecializationEnum specializationType;
 
 
-    public SpecializationFromDoctorPovDTO(Specialization source) {
+    public SpecializationFromDoctorViewDTO(Specialization source) {
         this.specializationType = source.getSpecializationType();
     }
 }

@@ -1,6 +1,5 @@
 package com.example.reservation.service;
 
-import com.example.reservation.dto.AppointmentFromPatientPovDTO;
 import com.example.reservation.dto.PatientDTO;
 import com.example.reservation.dto.PatientUpdateDTO;
 import com.example.reservation.exception_handler.CannotDeleteException;
@@ -27,7 +26,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public Optional<PatientDTO> getPatient(Integer id) {
         Patient patient = repository.findById(id).
-                orElseThrow(IllegalArgumentException::new);
+                orElseThrow(() -> new IllegalArgumentException("Patient not found"));
         return Optional.ofNullable(mapper.mapToDto(patient));
     }
 
@@ -56,12 +55,10 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public Optional<Patient> deletePatient(int id) throws CannotDeleteException {
-        if (!repository.existsById(id)) {
-            throw new IllegalArgumentException("Patient not found.");
-        }
-        Patient patient = repository.findById(id).orElse(null);
+        Patient patient = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Cannot find Patient."));
         if(!allowToDeletePatient(patient)) {
-            List<Integer> appointmentsIDs = getPatientAppointmentsID(patient);
+            List<Integer> appointmentsIDs = getPatientAppointmentsIDs(patient);
             throw new CannotDeleteException("Cannot delete Patient due to appointment scheduled. Appointments id: " + appointmentsIDs);
         }
         return repository.deleteById(id);
@@ -86,7 +83,7 @@ public class PatientServiceImpl implements PatientService {
         return appointments.isEmpty();
     }
 
-    private List<Integer> getPatientAppointmentsID(Patient patient) {
+    private List<Integer> getPatientAppointmentsIDs(Patient patient) {
         return patient.getAppointments().stream()
                 .map(Appointment::getId)
                 .collect(Collectors.toList());

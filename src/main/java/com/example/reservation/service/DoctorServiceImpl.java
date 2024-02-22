@@ -1,15 +1,13 @@
 package com.example.reservation.service;
 
-import com.example.reservation.dto.AppointmentFromDoctorPovDTO;
+import com.example.reservation.dto.AppointmentFromDoctorViewDTO;
 import com.example.reservation.dto.DoctorDTO;
 import com.example.reservation.dto.DoctorUpdateDTO;
 import com.example.reservation.enums.SpecializationEnum;
 import com.example.reservation.exception_handler.CannotDeleteException;
 import com.example.reservation.mapper.DoctorMapper;
 import com.example.reservation.mapper.DoctorUpdateMapper;
-import com.example.reservation.model.Doctor;
-import com.example.reservation.model.HospitalAffiliation;
-import com.example.reservation.model.Specialization;
+import com.example.reservation.model.*;
 import com.example.reservation.repository.DoctorRepository;
 import com.example.reservation.repository.HospitalAffiliationRepository;
 import com.example.reservation.repository.SpecializationRepository;
@@ -32,10 +30,8 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public Optional<DoctorDTO> getDoctor(Integer id) {
-        if (!doctorRepository.existsById(id)) {
-            throw new IllegalArgumentException("Doctor not found");
-        }
-        Doctor doctor = doctorRepository.findById(id).get();
+        Doctor doctor = doctorRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Doctor not found."));
         return Optional.ofNullable(mapper.mapToDto(doctor));
     }
 
@@ -72,17 +68,11 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public Optional<Doctor> deleteDoctor(int id) throws CannotDeleteException {
-        if (!isDoctorExist(id)) {
-            throw new IllegalArgumentException("Doctor not found");
-        }
-        DoctorDTO doctor = getDoctor(id).orElse(null);
-        Set<AppointmentFromDoctorPovDTO> appointments = Optional.ofNullable(doctor.getAppointments())
-                .orElseGet(Collections::emptySet);
-        if (!appointments.isEmpty()) {
-            List<Integer> ids = appointments.stream()
-                    .map(AppointmentFromDoctorPovDTO::getAppointmentId)
-                    .collect(Collectors.toList());
-            throw new CannotDeleteException("Cannot delete Doctor due to appointment scheduled. Appointments id: " + ids);
+        Doctor doctor = doctorRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Cannot find doctor"));
+        if (!allowToDeleteDoctor(doctor)) {
+            List<Integer> doctorAppointmentsIDs = getDoctorAppointmentsIDs(doctor);
+            throw new CannotDeleteException("Cannot delete Doctor due to appointment scheduled. Appointments id: " + doctorAppointmentsIDs);
         }
         return doctorRepository.deleteById(id);
     }
@@ -108,6 +98,18 @@ public class DoctorServiceImpl implements DoctorService {
                 .flatMap(doctors -> doctors.stream()
                         .map(mapper::mapToDto))
                 .collect(Collectors.toList());
+    }
+
+    private List<Integer> getDoctorAppointmentsIDs(Doctor doctor) {
+        return doctor.getAppointments().stream()
+                .map(Appointment::getId)
+                .collect(Collectors.toList());
+    }
+
+    private boolean allowToDeleteDoctor(Doctor doctor) {
+        Set<Appointment> appointments = Optional.ofNullable(doctor.getAppointments())
+                .orElseGet(Collections::emptySet);
+        return appointments.isEmpty();
     }
 
     private Set<Specialization> setSpecializationIfAlreadyExists(Doctor doctor) {

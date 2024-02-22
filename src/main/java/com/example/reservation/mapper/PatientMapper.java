@@ -2,10 +2,14 @@ package com.example.reservation.mapper;
 
 import com.example.reservation.dto.PatientDTO;
 import com.example.reservation.model.Patient;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class PatientMapper {
+
+    private final AppointmentFromPatientViewMapper appointmentFromPatientViewMapper;
 
     public PatientDTO mapToDto(Patient patient) {
         return PatientDTO.builder()
@@ -17,7 +21,7 @@ public class PatientMapper {
                 .streetNum(patient.getStreetNum())
                 .postalCode(patient.getPostalCode())
                 .email(patient.getEmail())
-                .appointments(patient.getAppointmentsForPatientDTO(patient.getAppointments()))
+                .appointments(appointmentFromPatientViewMapper.getAppointmentsFromPatientViewDTOs(patient))
                 .build();
     }
 

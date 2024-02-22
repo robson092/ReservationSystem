@@ -8,12 +8,13 @@ import java.util.Set;
 @Setter
 @EqualsAndHashCode
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class DoctorDTO {
     private int id;
     private String name;
     private String surname;
-    private Set<SpecializationFromDoctorPovDTO> specializations;
-    private Set<AppointmentFromDoctorPovDTO> appointments;
-    private Set<HospitalFromDoctorPovDTO> hospitalAffiliations;
+    private Set<SpecializationFromDoctorViewDTO> specializations;
+    private Set<AppointmentFromDoctorViewDTO> appointments;
+    private Set<HospitalFromDoctorViewDTO> hospitalAffiliations;
 }

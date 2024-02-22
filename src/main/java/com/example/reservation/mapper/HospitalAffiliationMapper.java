@@ -1,7 +1,7 @@
 package com.example.reservation.mapper;
 
 import com.example.reservation.dto.DoctorDTO;
-import com.example.reservation.dto.HospitalFromDoctorPovDTO;
+import com.example.reservation.dto.HospitalFromDoctorViewDTO;
 import com.example.reservation.model.Doctor;
 import com.example.reservation.model.HospitalAffiliation;
 import org.springframework.stereotype.Component;
@@ -12,15 +12,31 @@ import java.util.stream.Collectors;
 @Component
 public class HospitalAffiliationMapper {
 
-    public Set<HospitalFromDoctorPovDTO> mapToDto(Doctor doctor) {
+    public HospitalFromDoctorViewDTO mapToDto(HospitalAffiliation hospitalAffiliation) {
+        return HospitalFromDoctorViewDTO.builder()
+                .hospitalName(hospitalAffiliation.getHospitalName())
+                .city(hospitalAffiliation.getCity())
+                .street(hospitalAffiliation.getStreet())
+                .build();
+    }
+
+    public HospitalAffiliation mapToEntity(HospitalFromDoctorViewDTO dto) {
+        return HospitalAffiliation.builder()
+                .hospitalName(dto.getHospitalName())
+                .city(dto.getCity())
+                .street(dto.getStreet())
+                .build();
+    }
+
+    public Set<HospitalFromDoctorViewDTO> getSetOfHospitalAffiliationDTO(Doctor doctor) {
         return doctor.getHospitalAffiliations().stream()
-                .map(HospitalFromDoctorPovDTO::new)
+                .map(this::mapToDto)
                 .collect(Collectors.toSet());
     }
 
-    public Set<HospitalAffiliation> mapToEntity(DoctorDTO dto) {
+    public Set<HospitalAffiliation> getSetOfHospitalAffiliation(DoctorDTO dto) {
         return dto.getHospitalAffiliations().stream()
-                .map(hospital -> new HospitalAffiliation(hospital.getHospitalName(), hospital.getCity(), hospital.getStreet()))
+                .map(this::mapToEntity)
                 .collect(Collectors.toSet());
     }
 }

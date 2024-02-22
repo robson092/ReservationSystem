@@ -1,6 +1,5 @@
 package com.example.reservation.dto;
 
-import com.example.reservation.model.Patient;
 import lombok.*;
 
 import java.util.Set;
@@ -27,6 +26,6 @@ public class PatientDTO {
 
     private String email;
 
-    private Set<AppointmentFromPatientPovDTO> appointments;
+    private Set<AppointmentFromPatientViewDTO> appointments;
 
 }
