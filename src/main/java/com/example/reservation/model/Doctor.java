@@ -1,17 +1,12 @@
 package com.example.reservation.model;
 
-import com.example.reservation.dto.AppointmentFromDoctorPovDTO;
-import com.example.reservation.dto.HospitalFromDoctorPovDTO;
-import com.example.reservation.dto.SpecializationFromDoctorPovDTO;
 import lombok.*;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -52,24 +47,6 @@ public class Doctor {
     )
     @NotEmpty
     private Set<HospitalAffiliation> hospitalAffiliations;
-
-    public Set<AppointmentFromDoctorPovDTO> getAppointmentsForDoctorDTO(Set<Appointment> appointments) {
-        return appointments.stream()
-                .map(AppointmentFromDoctorPovDTO::new)
-                .collect(Collectors.toSet());
-    }
-
-    public Set<SpecializationFromDoctorPovDTO> getSpecializationsForDoctorDTO(Set<Specialization> specializations) {
-        return specializations.stream()
-                .map(SpecializationFromDoctorPovDTO::new)
-                .collect(Collectors.toSet());
-    }
-
-    public Set<HospitalFromDoctorPovDTO> getHospitalForDoctorDTO(Set<HospitalAffiliation> hospitalAffiliations) {
-        return hospitalAffiliations.stream()
-                .map(HospitalFromDoctorPovDTO::new)
-                .collect(Collectors.toSet());
-    }
 
     @Override
     public String toString() {

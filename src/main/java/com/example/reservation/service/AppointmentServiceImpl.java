@@ -22,10 +22,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public Optional<AppointmentDTO> getAppointment(Integer id) {
-        if (!repository.existsById(id)) {
-            throw new IllegalArgumentException("Appointment not found");
-        }
-        Appointment appointment = repository.findById(id).get();
+        Appointment appointment = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Appointment not found."));
         return Optional.ofNullable(mapper.mapToDto(appointment));
     }
 
@@ -61,11 +59,11 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public Optional<Appointment> deleteAppointment(int id) {
+    public void deleteAppointment(int id) {
         if (!repository.existsById(id)) {
             throw new IllegalArgumentException("Appointment not found");
         }
-        return repository.deleteById(id);
+        repository.deleteById(id);
     }
 
     @Override
@@ -74,11 +72,12 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public void setAppointmentDone(int id) {
+    public AppointmentDTO setAppointmentDone(int id) {
         Appointment appointment = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Appointment not found."));
         appointment.setDone(true);
         repository.save(appointment);
+        return mapper.mapToDto(appointment);
     }
 
 }

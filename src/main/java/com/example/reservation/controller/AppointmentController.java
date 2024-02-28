@@ -2,6 +2,7 @@ package com.example.reservation.controller;
 
 import com.example.reservation.dto.AppointmentDTO;
 import com.example.reservation.model.Appointment;
+import com.example.reservation.service.AppointmentService;
 import com.example.reservation.service.AppointmentServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +18,7 @@ import java.util.List;
 @RequestMapping("/appointments")
 public class AppointmentController {
 
-    private final AppointmentServiceImpl service;
+    private final AppointmentService service;
 
     @GetMapping(params = {"!sort", "!page", "!size"})
     ResponseEntity<List<AppointmentDTO>> getAllAppointments() {
@@ -50,15 +51,16 @@ public class AppointmentController {
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<?> deleteAppointment(@PathVariable int id) {
+    ResponseEntity<String> deleteAppointment(@PathVariable int id) {
         if(!service.isAppointmentExist(id)) {
             ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(service.deleteAppointment(id));
+        service.deleteAppointment(id);
+        return ResponseEntity.ok("Successfully deleted.");
     }
 
     @PatchMapping("/{id}")
-    ResponseEntity<?> setAppointmentStatus(@PathVariable int id) {
+    ResponseEntity<AppointmentDTO> setAppointmentStatus(@PathVariable int id) {
         service.setAppointmentDone(id);
         return ResponseEntity.noContent().build();
     }

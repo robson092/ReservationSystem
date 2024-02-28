@@ -1,8 +1,6 @@
 package com.example.reservation.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -10,8 +8,10 @@ import java.util.Set;
 
 @Entity
 @Table(name = "hospital_affiliations")
+@Builder
 @Getter @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class HospitalAffiliation {
 
     @Id
@@ -19,11 +19,11 @@ public class HospitalAffiliation {
     private int id;
 
     @Column(name = "hospital_name")
-    private final String hospitalName;
+    private String hospitalName;
 
-    private final String city;
+    private String city;
 
-    private final String street;
+    private String street;
 
     @Column(name = "time_slot_per_client_in_min")
     private int timeSlotPerClientInMinute;

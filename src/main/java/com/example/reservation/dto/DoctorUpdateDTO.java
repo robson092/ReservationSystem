@@ -4,15 +4,18 @@ import com.example.reservation.enums.SpecializationEnum;
 import com.example.reservation.model.Specialization;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Set;
 
-@Getter
+@Getter @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class DoctorUpdateDTO {
 
-    private final int id;
-    private final String name;
-    private final String surname;
-    private final Set<Specialization> specializations;
+    private int id;
+    private String name;
+    private String surname;
+    private Set<Specialization> specializations;
 }
