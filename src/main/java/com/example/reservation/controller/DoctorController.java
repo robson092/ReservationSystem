@@ -3,7 +3,7 @@ package com.example.reservation.controller;
 import com.example.reservation.dto.DoctorDTO;
 import com.example.reservation.dto.DoctorUpdateDTO;
 import com.example.reservation.exception_handler.CannotDeleteException;
-import com.example.reservation.service.DoctorServiceImpl;
+import com.example.reservation.service.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/doctors")
 public class DoctorController {
 
-    private final DoctorServiceImpl service;
+    private final DoctorService service;
 
     @GetMapping(params = {"!sort", "!page", "!size"})
     ResponseEntity<List<DoctorDTO>> getAllDoctors() {
@@ -51,12 +51,13 @@ public class DoctorController {
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<?> deleteDoctor(@PathVariable int id) throws CannotDeleteException {
-        return ResponseEntity.ok(service.deleteDoctor(id));
+    ResponseEntity<String> deleteDoctor(@PathVariable int id) throws CannotDeleteException {
+        service.deleteDoctor(id);
+        return ResponseEntity.ok("Successfully deleted.");
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<?> updateDoctor(@PathVariable int id, @RequestBody DoctorUpdateDTO doctorDto) {
+    ResponseEntity<String> updateDoctor(@PathVariable int id, @RequestBody DoctorUpdateDTO doctorDto) {
         service.updateDoctor(id, doctorDto);
         return ResponseEntity.noContent().build();
     }

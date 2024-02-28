@@ -75,7 +75,7 @@ class DoctorServiceImplTest {
     @Test
     @DisplayName("Throw illegalArgumentException when id is incorrect")
     void when_getDoctor_with_incorrect_id_then_throw_illegalArgumentException() {
-        when(mockDoctorRepo.findById(1)).thenReturn(Optional.ofNullable(null));
+        when(mockDoctorRepo.findById(1)).thenReturn(Optional.empty());
         assertThrows(IllegalArgumentException.class, () -> doctorService.getDoctor(1));
     }
 
@@ -141,7 +141,7 @@ class DoctorServiceImplTest {
     @Test
     @DisplayName("Should throw illegalArgumentException when incorrect id provided")
     void when_deleteDoctor_with_incorrect_id_then_throw_illegalArgumentException() {
-        when(mockDoctorRepo.findById(1)).thenReturn(Optional.ofNullable(null));
+        when(mockDoctorRepo.findById(1)).thenReturn(Optional.empty());
         assertThrows(IllegalArgumentException.class, () -> doctorService.deleteDoctor(1));
         verify(mockDoctorRepo).findById(1);
     }
@@ -177,7 +177,7 @@ class DoctorServiceImplTest {
     @DisplayName("Should throw illegalArgumentException when provide incorrect id")
     void when_updateDoctor_with_incorrect_id_then_throw_illegalArgumentException() {
         var doctorUpdateDTO = new DoctorUpdateDTO();
-        when(mockDoctorRepo.findById(1)).thenReturn(Optional.ofNullable(null));
+        when(mockDoctorRepo.findById(1)).thenReturn(Optional.empty());
         assertThrows(IllegalArgumentException.class, () -> doctorService.updateDoctor(1, doctorUpdateDTO));
     }
 

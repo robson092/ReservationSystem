@@ -7,6 +7,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
-    Optional<Appointment> deleteById(int id);
     List<Appointment> findByDone(boolean done);
 }

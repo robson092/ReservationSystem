@@ -14,7 +14,7 @@ public interface AppointmentService {
     List<AppointmentDTO> getAllAppointmentsWithPage(Pageable page);
     List<AppointmentDTO> getDoneAppointments(boolean done);
     AppointmentDTO save(AppointmentDTO appointmentDTO);
-    Optional<Appointment> deleteAppointment(int id);
+    void deleteAppointment(int id);
     boolean isAppointmentExist(Integer id);
-    void setAppointmentDone(int id);
+    AppointmentDTO setAppointmentDone(int id);
 }

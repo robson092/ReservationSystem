@@ -67,14 +67,14 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public Optional<Doctor> deleteDoctor(int id) throws CannotDeleteException {
+    public void deleteDoctor(int id) throws CannotDeleteException {
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Cannot find doctor"));
         if (!allowToDeleteDoctor(doctor)) {
             List<Integer> doctorAppointmentsIDs = getDoctorAppointmentsIDs(doctor);
             throw new CannotDeleteException("Cannot delete Doctor due to appointment scheduled. Appointments id: " + doctorAppointmentsIDs);
         }
-        return doctorRepository.deleteById(id);
+        doctorRepository.deleteById(id);
     }
 
     @Override
@@ -82,6 +82,7 @@ public class DoctorServiceImpl implements DoctorService {
         return doctorRepository.existsById(id);
     }
 
+    @Override
     public void updateDoctor(Integer id, DoctorUpdateDTO doctorDTO) {
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Doctor not found."));
