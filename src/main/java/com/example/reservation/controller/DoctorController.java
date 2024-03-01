@@ -37,9 +37,15 @@ public class DoctorController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/specializations")
+    @GetMapping("/search/specializations")
     ResponseEntity<List<DoctorDTO>> getDoctorsBySpecialization(@RequestParam("value") String specialization) {
-        return ResponseEntity.ok(service.getDoctorBySpecialization(specialization));
+        return ResponseEntity.ok(service.getAllDoctorsBySpecialization(specialization));
+    }
+
+    @GetMapping("/search/location")
+    ResponseEntity<List<DoctorDTO>> getAllDoctorsByCityAndHospitalName(@RequestParam("city") String city,
+                                                                       @RequestParam("hospital") String hospital) {
+        return ResponseEntity.ok(service.getAllDoctorsByCityAndHospitalName(city, hospital));
     }
 
     @PostMapping

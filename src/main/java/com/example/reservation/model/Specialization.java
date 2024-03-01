@@ -1,9 +1,7 @@
 package com.example.reservation.model;
 
 import com.example.reservation.enums.SpecializationEnum;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -12,7 +10,6 @@ import java.util.Set;
 @Entity
 @Table(name = "specializations")
 @Getter @Setter
-@RequiredArgsConstructor
 public class Specialization {
 
     @Id
@@ -20,10 +17,17 @@ public class Specialization {
     private int id;
 
     @Column
-    private final SpecializationEnum specializationType;
+    private SpecializationEnum specializationType;
 
     @ManyToMany(mappedBy = "specializations")
     private Set<Doctor> doctors ;
+
+    public Specialization() {
+    }
+
+    public Specialization(SpecializationEnum specializationType) {
+        this.specializationType = specializationType;
+    }
 
     @Override
     public boolean equals(Object o) {
