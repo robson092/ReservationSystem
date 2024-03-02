@@ -48,6 +48,11 @@ public class DoctorController {
         return ResponseEntity.ok(service.getAllDoctorsByCityAndHospitalName(city, hospital));
     }
 
+    @GetMapping("/search/location/city")
+    ResponseEntity<List<DoctorDTO>> getAllDoctorsByCity(@RequestParam("v") String city) {
+        return ResponseEntity.ok(service.getAllDoctorsByCity(city));
+    }
+
     @PostMapping
     ResponseEntity<DoctorDTO> addDoctor(@Valid @RequestBody DoctorDTO doctorDto) {
         DoctorDTO doctor = service.save(doctorDto);

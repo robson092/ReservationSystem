@@ -19,4 +19,5 @@ public interface DoctorService {
     void updateDoctor(Integer id, DoctorUpdateDTO doctorDTO);
 
     List<DoctorDTO> getAllDoctorsByCityAndHospitalName(String city, String hospitalName);
+    List<DoctorDTO> getAllDoctorsByCity(String city);
 }

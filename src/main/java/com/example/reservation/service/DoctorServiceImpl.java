@@ -114,6 +114,20 @@ public class DoctorServiceImpl implements DoctorService {
         return doctorDTOs;
     }
 
+    @Override
+    public List<DoctorDTO> getAllDoctorsByCity(String city) {
+        List<DoctorDTO> doctorDTOs = new ArrayList<>();
+        List<HospitalAffiliation> hospitalsInRequestedCity = hospitalAffiliationRepository.findByCity(city);
+        if (!hospitalsInRequestedCity.isEmpty()) {
+            doctorDTOs = hospitalsInRequestedCity.stream()
+                    .map(HospitalAffiliation::getDoctors)
+                    .flatMap(doctors -> doctors.stream()
+                            .map(mapper::mapToDto))
+                    .collect(Collectors.toList());
+        }
+        return doctorDTOs;
+    }
+
     private List<Integer> getDoctorAppointmentsIDs(Doctor doctor) {
         return doctor.getAppointments().stream()
                 .map(Appointment::getId)
@@ -144,5 +158,4 @@ public class DoctorServiceImpl implements DoctorService {
                 .collect(Collectors.toSet());
 
     }
-
 }
