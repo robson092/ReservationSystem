@@ -1,6 +1,5 @@
 package com.example.reservation.service;
 
-import com.example.reservation.dto.AppointmentFromDoctorViewDTO;
 import com.example.reservation.dto.DoctorDTO;
 import com.example.reservation.dto.DoctorUpdateDTO;
 import com.example.reservation.enums.SpecializationEnum;
@@ -91,7 +90,7 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<DoctorDTO> getDoctorBySpecialization(String specialization) {
+    public List<DoctorDTO> getAllDoctorsBySpecialization(String specialization) {
         SpecializationEnum specializationEnum = SpecializationEnum.valueOf(specialization.toUpperCase());
         List<Specialization> specializations = specializationRepository.findAllBySpecializationType(specializationEnum);
         return specializations.stream()
@@ -99,6 +98,34 @@ public class DoctorServiceImpl implements DoctorService {
                 .flatMap(doctors -> doctors.stream()
                         .map(mapper::mapToDto))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DoctorDTO> getAllDoctorsByCityAndHospitalName(String city, String hospitalName) {
+        List<DoctorDTO> doctorDTOs = new ArrayList<>();
+        Optional<HospitalAffiliation> hospitalNameAndCity = hospitalAffiliationRepository.findByHospitalNameAndCity(hospitalName, city);
+        HospitalAffiliation hospitalAffiliation = hospitalNameAndCity.orElse(null);
+        if (hospitalAffiliation != null) {
+            List<Doctor> doctors = doctorRepository.findByHospitalAffiliations(hospitalAffiliation);
+            doctorDTOs = doctors.stream()
+                    .map(mapper::mapToDto)
+                    .collect(Collectors.toList());
+        }
+        return doctorDTOs;
+    }
+
+    @Override
+    public List<DoctorDTO> getAllDoctorsByCity(String city) {
+        List<DoctorDTO> doctorDTOs = new ArrayList<>();
+        List<HospitalAffiliation> hospitalsInRequestedCity = hospitalAffiliationRepository.findByCity(city);
+        if (!hospitalsInRequestedCity.isEmpty()) {
+            doctorDTOs = hospitalsInRequestedCity.stream()
+                    .map(HospitalAffiliation::getDoctors)
+                    .flatMap(doctors -> doctors.stream()
+                            .map(mapper::mapToDto))
+                    .collect(Collectors.toList());
+        }
+        return doctorDTOs;
     }
 
     private List<Integer> getDoctorAppointmentsIDs(Doctor doctor) {
@@ -131,5 +158,4 @@ public class DoctorServiceImpl implements DoctorService {
                 .collect(Collectors.toSet());
 
     }
-
 }

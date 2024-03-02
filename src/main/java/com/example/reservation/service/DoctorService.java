@@ -15,6 +15,9 @@ public interface DoctorService {
     DoctorDTO save(DoctorDTO doctorDto);
     void deleteDoctor(int id) throws CannotDeleteException;
     boolean isDoctorExist(Integer id);
-    List<DoctorDTO> getDoctorBySpecialization(String specialization);
+    List<DoctorDTO> getAllDoctorsBySpecialization(String specialization);
     void updateDoctor(Integer id, DoctorUpdateDTO doctorDTO);
+
+    List<DoctorDTO> getAllDoctorsByCityAndHospitalName(String city, String hospitalName);
+    List<DoctorDTO> getAllDoctorsByCity(String city);
 }
