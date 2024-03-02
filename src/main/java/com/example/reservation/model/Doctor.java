@@ -48,6 +48,10 @@ public class Doctor {
     @NotEmpty
     private Set<HospitalAffiliation> hospitalAffiliations;
 
+    @OneToOne
+    @JoinColumn(name = "doctor_availability_id")
+    private DoctorAvailability availability;
+
     @Override
     public String toString() {
         return "Doctor{" +
