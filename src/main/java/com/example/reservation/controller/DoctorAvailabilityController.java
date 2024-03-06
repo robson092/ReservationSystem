@@ -40,7 +40,7 @@ public class DoctorAvailabilityController {
     }
 
     @GetMapping("/doctor/{id}")
-    ResponseEntity<List<DoctorAvailability>> getDoctorAvailabilities(@PathVariable int id) {
+    ResponseEntity<List<DoctorAvailabilityDTO>> getDoctorAvailabilities(@PathVariable int id) {
         return ResponseEntity.ok(doctorAvailabilityService.getAvailAbilitiesByDoctor(id));
     }
 

@@ -14,7 +14,7 @@ public interface DoctorAvailabilityService {
     Optional<DoctorAvailability> getAvailability(int id);
     List<DoctorAvailability> getAllAvailabilities();
     List<DoctorAvailability> getAvailAbilitiesByDayOfWeek(String dayOfWeek);
-    List<DoctorAvailability> getAvailAbilitiesByDoctor(int id);
+    List<DoctorAvailabilityDTO> getAvailAbilitiesByDoctor(int id);
     void updateHours(int id, String startTime, String endTime);
     DoctorAvailability updateDays(int id, String dayOfWeek);
     void changeAvailableStatus(int id, boolean isAvailable);

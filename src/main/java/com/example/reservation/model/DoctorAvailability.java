@@ -1,15 +1,11 @@
 package com.example.reservation.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
-import java.util.List;
 
 @Entity
 @Table(name = "doctor_availability")
@@ -23,12 +19,11 @@ public class DoctorAvailability {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @NotNull(message = "Day is mandatory.")
+    @Enumerated(EnumType.STRING)
     private DayOfWeek dayOfWeek;
     @NotNull(message = "Start time is mandatory.")
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime startTime;
     @NotNull(message = "End time is mandatory.")
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime endTime;
     private boolean isAvailable;
     @ManyToOne

@@ -14,6 +14,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,10 +45,13 @@ public class DoctorAvailabilityServiceImpl implements DoctorAvailabilityService 
     }
 
     @Override
-    public List<DoctorAvailability> getAvailAbilitiesByDoctor(int id) {
+    public List<DoctorAvailabilityDTO> getAvailAbilitiesByDoctor(int id) {
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND));
-       return doctorAvailabilityRepository.findByDoctor(doctor);
+        List<DoctorAvailability> doctorAvailabilities = doctorAvailabilityRepository.findByDoctor(doctor);
+        return doctorAvailabilities.stream()
+                .map(mapper::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
