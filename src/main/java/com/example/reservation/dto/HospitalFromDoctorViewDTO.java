@@ -10,5 +10,6 @@ public class HospitalFromDoctorViewDTO {
     private String hospitalName;
     private String city;
     private String street;
+    private int timeSlotPerClientInMinute;
 
 }

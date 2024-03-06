@@ -17,6 +17,7 @@ public class HospitalAffiliationMapper {
                 .hospitalName(hospitalAffiliation.getHospitalName())
                 .city(hospitalAffiliation.getCity())
                 .street(hospitalAffiliation.getStreet())
+                .timeSlotPerClientInMinute(hospitalAffiliation.getTimeSlotPerClientInMinute())
                 .build();
     }
 
@@ -25,6 +26,7 @@ public class HospitalAffiliationMapper {
                 .hospitalName(dto.getHospitalName())
                 .city(dto.getCity())
                 .street(dto.getStreet())
+                .timeSlotPerClientInMinute(dto.getTimeSlotPerClientInMinute())
                 .build();
     }
 

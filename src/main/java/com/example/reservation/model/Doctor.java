@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -48,9 +49,8 @@ public class Doctor {
     @NotEmpty
     private Set<HospitalAffiliation> hospitalAffiliations;
 
-    @OneToOne
-    @JoinColumn(name = "doctor_availability_id")
-    private DoctorAvailability availability;
+    @OneToMany(mappedBy = "doctor")
+    private List<DoctorAvailability> availability;
 
     @Override
     public String toString() {
