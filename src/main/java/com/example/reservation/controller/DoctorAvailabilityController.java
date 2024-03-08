@@ -1,13 +1,9 @@
 package com.example.reservation.controller;
 
-import com.example.reservation.dto.AppointmentDTO;
 import com.example.reservation.dto.DoctorAvailabilityDTO;
-import com.example.reservation.dto.DoctorDTO;
-import com.example.reservation.dto.DoctorUpdateDTO;
 import com.example.reservation.model.DoctorAvailability;
 import com.example.reservation.service.DoctorAvailabilityService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/doctors/search/availability")
+@RequestMapping("/doctors/availability")
 public class DoctorAvailabilityController {
 
     private final DoctorAvailabilityService doctorAvailabilityService;
@@ -29,17 +25,17 @@ public class DoctorAvailabilityController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping
-    ResponseEntity<List<DoctorAvailability>> getAllDoctorAvailabilities() {
+    @GetMapping("/search")
+    ResponseEntity<List<DoctorAvailabilityDTO>> getAllDoctorAvailabilities() {
         return ResponseEntity.ok(doctorAvailabilityService.getAllAvailabilities());
     }
 
-    @GetMapping("/day")
-    ResponseEntity<List<DoctorAvailability>> getDoctorsAvailabilitiesByDay(@RequestParam("v") String day) {
+    @GetMapping("/search/day")
+    ResponseEntity<List<DoctorAvailabilityDTO>> getDoctorsAvailabilitiesByDay(@RequestParam("v") String day) {
         return ResponseEntity.ok(doctorAvailabilityService.getAvailAbilitiesByDayOfWeek(day));
     }
 
-    @GetMapping("/doctor/{id}")
+    @GetMapping("/search/doctor/{id}")
     ResponseEntity<List<DoctorAvailabilityDTO>> getDoctorAvailabilities(@PathVariable int id) {
         return ResponseEntity.ok(doctorAvailabilityService.getAvailAbilitiesByDoctor(id));
     }
@@ -52,20 +48,20 @@ public class DoctorAvailabilityController {
                 .body(doctorAvailability);
     }
 
-    @PutMapping("/{id}/update/hours")
+    @PatchMapping("/{id}/hours")
     ResponseEntity<String> updateAvailabilityHours(@PathVariable int id, @RequestParam("start") String startTime,
                                                    @RequestParam("end") String endTime) {
         doctorAvailabilityService.updateHours(id, startTime, endTime);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/update/day")
+    @PatchMapping("/{id}/day")
     ResponseEntity<String> updateAvailabilityDays(@PathVariable int id, @RequestParam("v") String day) {
         doctorAvailabilityService.updateDays(id, day);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/update/availability")
+    @PatchMapping("/{id}/availability")
     ResponseEntity<String> setAvailabilityStatus(@PathVariable int id, @RequestParam("v") boolean isAvailable) {
         doctorAvailabilityService.changeAvailableStatus(id, isAvailable);
         return ResponseEntity.noContent().build();

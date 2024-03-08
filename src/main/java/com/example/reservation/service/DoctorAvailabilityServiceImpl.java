@@ -39,9 +39,12 @@ public class DoctorAvailabilityServiceImpl implements DoctorAvailabilityService 
     }
 
     @Override
-    public List<DoctorAvailability> getAvailAbilitiesByDayOfWeek(String dayOfWeek) {
-        DayOfWeek day = DayOfWeek.valueOf(dayOfWeek);
-        return doctorAvailabilityRepository.findByDayOfWeek(day);
+    public List<DoctorAvailabilityDTO> getAvailAbilitiesByDayOfWeek(String dayOfWeek) {
+        DayOfWeek day = DayOfWeek.valueOf(dayOfWeek.toUpperCase());
+        List<DoctorAvailability> daysOfWeek = doctorAvailabilityRepository.findByDayOfWeek(day);
+        return daysOfWeek.stream()
+                .map(mapper::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -55,8 +58,11 @@ public class DoctorAvailabilityServiceImpl implements DoctorAvailabilityService 
     }
 
     @Override
-    public List<DoctorAvailability> getAllAvailabilities() {
-        return doctorAvailabilityRepository.findAll();
+    public List<DoctorAvailabilityDTO> getAllAvailabilities() {
+        List<DoctorAvailability> doctorAvailabilities = doctorAvailabilityRepository.findAll();
+        return doctorAvailabilities.stream()
+                .map(mapper::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -72,7 +78,7 @@ public class DoctorAvailabilityServiceImpl implements DoctorAvailabilityService 
     public DoctorAvailability updateDays(int id, String day) {
         DoctorAvailability doctorAvailability = doctorAvailabilityRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND));
-        DayOfWeek dayOfWeek = DayOfWeek.valueOf(day);
+        DayOfWeek dayOfWeek = DayOfWeek.valueOf(day.toUpperCase());
         doctorAvailability.setDayOfWeek(dayOfWeek);
         doctorAvailabilityRepository.save(doctorAvailability);
         return doctorAvailability;
@@ -96,7 +102,7 @@ public class DoctorAvailabilityServiceImpl implements DoctorAvailabilityService 
     }
 
     private LocalTime formatStringToTime(String time) {
-        DateTimeFormatter parser = DateTimeFormatter.ofPattern("h[:mm]");
+        DateTimeFormatter parser = DateTimeFormatter.ofPattern("H[:mm]");
         return LocalTime.parse(time, parser);
     }
 }

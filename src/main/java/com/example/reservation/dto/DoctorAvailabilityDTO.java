@@ -13,9 +13,7 @@ import java.time.LocalTime;
 public class DoctorAvailabilityDTO {
     private int id;
     private DayOfWeek dayOfWeek;
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime startTime;
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime endTime;
     private boolean isAvailable;
     private int doctorId;
