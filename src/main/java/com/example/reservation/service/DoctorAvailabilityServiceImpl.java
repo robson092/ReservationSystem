@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -39,9 +40,8 @@ public class DoctorAvailabilityServiceImpl implements DoctorAvailabilityService 
     }
 
     @Override
-    public List<DoctorAvailabilityDTO> getAvailAbilitiesByDayOfWeek(String dayOfWeek) {
-        DayOfWeek day = DayOfWeek.valueOf(dayOfWeek.toUpperCase());
-        List<DoctorAvailability> daysOfWeek = doctorAvailabilityRepository.findByDayOfWeek(day);
+    public List<DoctorAvailabilityDTO> getAvailAbilitiesByDate(String date) {
+        List<DoctorAvailability> daysOfWeek = doctorAvailabilityRepository.findByDate(LocalDate.parse(date));
         return daysOfWeek.stream()
                 .map(mapper::mapToDto)
                 .collect(Collectors.toList());
@@ -75,13 +75,13 @@ public class DoctorAvailabilityServiceImpl implements DoctorAvailabilityService 
     }
 
     @Override
-    public DoctorAvailability updateDays(int id, String day) {
+    public void updateDate(int id, String date) {
         DoctorAvailability doctorAvailability = doctorAvailabilityRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND));
-        DayOfWeek dayOfWeek = DayOfWeek.valueOf(day.toUpperCase());
-        doctorAvailability.setDayOfWeek(dayOfWeek);
+        int currentYear = LocalDate.now().getYear();
+        LocalDate requestedDate = LocalDate.parse(currentYear + "-" + date);
+        doctorAvailability.setDate(requestedDate);
         doctorAvailabilityRepository.save(doctorAvailability);
-        return doctorAvailability;
     }
 
     @Override

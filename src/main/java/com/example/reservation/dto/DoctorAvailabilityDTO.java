@@ -1,9 +1,8 @@
 package com.example.reservation.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
-import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @AllArgsConstructor
@@ -12,7 +11,7 @@ import java.time.LocalTime;
 @Builder
 public class DoctorAvailabilityDTO {
     private int id;
-    private DayOfWeek dayOfWeek;
+    private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;
     private boolean isAvailable;

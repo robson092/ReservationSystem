@@ -30,9 +30,9 @@ public class DoctorAvailabilityController {
         return ResponseEntity.ok(doctorAvailabilityService.getAllAvailabilities());
     }
 
-    @GetMapping("/search/day")
-    ResponseEntity<List<DoctorAvailabilityDTO>> getDoctorsAvailabilitiesByDay(@RequestParam("v") String day) {
-        return ResponseEntity.ok(doctorAvailabilityService.getAvailAbilitiesByDayOfWeek(day));
+    @GetMapping("/search/date")
+    ResponseEntity<List<DoctorAvailabilityDTO>> getDoctorsAvailabilitiesByDate(@RequestParam("v") String day) {
+        return ResponseEntity.ok(doctorAvailabilityService.getAvailAbilitiesByDate(day));
     }
 
     @GetMapping("/search/doctor/{id}")
@@ -52,19 +52,19 @@ public class DoctorAvailabilityController {
     ResponseEntity<String> updateAvailabilityHours(@PathVariable int id, @RequestParam("start") String startTime,
                                                    @RequestParam("end") String endTime) {
         doctorAvailabilityService.updateHours(id, startTime, endTime);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Hours updated successfully");
     }
 
-    @PatchMapping("/{id}/day")
-    ResponseEntity<String> updateAvailabilityDays(@PathVariable int id, @RequestParam("v") String day) {
-        doctorAvailabilityService.updateDays(id, day);
-        return ResponseEntity.noContent().build();
+    @PatchMapping("/{id}/date")
+    ResponseEntity<String> updateAvailabilityDate(@PathVariable int id, @RequestParam("v") String date) {
+        doctorAvailabilityService.updateDate(id, date);
+        return ResponseEntity.ok("Date updated successfully");
     }
 
     @PatchMapping("/{id}/availability")
     ResponseEntity<String> setAvailabilityStatus(@PathVariable int id, @RequestParam("v") boolean isAvailable) {
         doctorAvailabilityService.changeAvailableStatus(id, isAvailable);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Availability changed successfully");
     }
 
     @DeleteMapping("/{id}")

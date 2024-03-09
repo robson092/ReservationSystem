@@ -14,7 +14,7 @@ public class DoctorAvailabilityMapper {
     public DoctorAvailabilityDTO mapToDto(DoctorAvailability doctorAvailability) {
         return DoctorAvailabilityDTO.builder()
                 .id(doctorAvailability.getId())
-                .dayOfWeek(doctorAvailability.getDayOfWeek())
+                .date(doctorAvailability.getDate())
                 .startTime(doctorAvailability.getStartTime())
                 .endTime(doctorAvailability.getEndTime())
                 .isAvailable(doctorAvailability.isAvailable())
@@ -24,7 +24,7 @@ public class DoctorAvailabilityMapper {
 
     public DoctorAvailability mapToEntity(DoctorAvailabilityDTO dto) {
         return DoctorAvailability.builder()
-                .dayOfWeek(dto.getDayOfWeek())
+                .date(dto.getDate())
                 .startTime(dto.getStartTime())
                 .endTime(dto.getEndTime())
                 .isAvailable(dto.isAvailable())

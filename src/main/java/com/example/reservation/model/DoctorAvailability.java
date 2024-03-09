@@ -1,10 +1,12 @@
 package com.example.reservation.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
@@ -18,9 +20,8 @@ public class DoctorAvailability {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NotNull(message = "Day is mandatory.")
-    @Enumerated(EnumType.STRING)
-    private DayOfWeek dayOfWeek;
+    @NotNull(message = "Date is mandatory.")
+    private LocalDate date;
     @NotNull(message = "Start time is mandatory.")
     private LocalTime startTime;
     @NotNull(message = "End time is mandatory.")
