@@ -30,5 +30,8 @@ public class DoctorAvailability {
     @ManyToOne
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
+    @ManyToOne
+    @JoinColumn(name = "hospitalAffiliation_id")
+    private HospitalAffiliation hospitalAffiliation;
 
 }

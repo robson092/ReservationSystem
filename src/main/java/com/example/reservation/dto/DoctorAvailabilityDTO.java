@@ -16,4 +16,5 @@ public class DoctorAvailabilityDTO {
     private LocalTime endTime;
     private boolean isAvailable;
     private int doctorId;
+    private int hospitalAffiliationId;
 }
