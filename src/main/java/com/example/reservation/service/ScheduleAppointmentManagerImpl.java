@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +32,11 @@ public class ScheduleAppointmentManagerImpl implements ScheduleAppointmentManage
 
     @Override
     public boolean checkIfAppointmentSlotIsFree(LocalDateTime appointmentDate, int doctorId) {
-        return false;
+        List<AppointmentSlot> appointmentSlots = getAppointmentSlotsForDoctor(doctorId);
+        List<LocalDateTime> dateTimes = appointmentSlots.stream()
+                .map(AppointmentSlot::getDateTime)
+                .collect(Collectors.toList());
+        return dateTimes.contains(appointmentDate);
     }
 
     @Override

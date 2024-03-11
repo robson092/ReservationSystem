@@ -5,8 +5,9 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @Getter @Setter
-public class HospitalFromDoctorViewDTO {
+public class HospitalAffiliationDTO {
 
+    private int id;
     private String hospitalName;
     private String city;
     private String street;
