@@ -13,9 +13,8 @@ import java.util.Set;
 public class AppointmentDTO {
     private int id;
     private LocalDateTime date;
-    private PatientDTO patientDTO;
-    private DoctorDTO doctorDTO;
-    private Set<Specialization> doctorSpecialization;
+    private PatientDTO patient;
+    private DoctorDTO doctor;
     private boolean done;
 
 }

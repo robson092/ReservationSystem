@@ -31,4 +31,11 @@ public class HospitalAffiliationServiceImpl implements HospitalAffiliationServic
                 .orElseThrow(() -> new IllegalArgumentException("Not found"));
         return Optional.ofNullable(mapper.mapToDto(hospitalAffiliation));
     }
+
+    @Override
+    public HospitalAffiliationDTO save(HospitalAffiliationDTO hospitalAffiliationDTO) {
+        HospitalAffiliation hospitalAffiliation = mapper.mapToEntity(hospitalAffiliationDTO);
+        HospitalAffiliation savedHospital = hospitalAffiliationRepository.save(hospitalAffiliation);
+        return mapper.mapToDto(savedHospital);
+    }
 }

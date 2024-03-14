@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -26,5 +27,13 @@ public class HospitalAffiliationController {
         return hospitalAffiliationService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    ResponseEntity<HospitalAffiliationDTO> addHospitalAffiliation(@RequestBody HospitalAffiliationDTO hospitalAffiliationDTO) {
+        HospitalAffiliationDTO hospital = hospitalAffiliationService.save(hospitalAffiliationDTO);
+        return ResponseEntity
+                .created(URI.create("/" + hospital.getId()))
+                .body(hospital);
     }
 }

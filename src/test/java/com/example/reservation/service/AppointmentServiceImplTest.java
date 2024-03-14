@@ -5,6 +5,8 @@ import com.example.reservation.exception_handler.CannotDeleteException;
 import com.example.reservation.mapper.AppointmentMapper;
 import com.example.reservation.model.Appointment;
 import com.example.reservation.repository.AppointmentRepository;
+import com.example.reservation.repository.DoctorRepository;
+import com.example.reservation.repository.PatientRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

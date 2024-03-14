@@ -60,6 +60,8 @@ public class Doctor {
                 ", surname='" + surname + '\'' +
                 ", specializations=" + specializations +
                 ", appointments=" + appointments +
+                ", hospitalAffiliations=" + hospitalAffiliations +
+                ", availability=" + availability +
                 '}';
     }
 
@@ -68,11 +70,11 @@ public class Doctor {
         if (this == o) return true;
         if (!(o instanceof Doctor)) return false;
         Doctor doctor = (Doctor) o;
-        return id == doctor.id && Objects.equals(name, doctor.name) && Objects.equals(surname, doctor.surname) && Objects.equals(specializations, doctor.specializations) && Objects.equals(appointments, doctor.appointments);
+        return id == doctor.id && Objects.equals(name, doctor.name) && Objects.equals(surname, doctor.surname) && Objects.equals(specializations, doctor.specializations) && Objects.equals(hospitalAffiliations, doctor.hospitalAffiliations) && Objects.equals(availability, doctor.availability);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, surname, specializations, appointments);
+        return Objects.hash(id, name, surname, specializations, hospitalAffiliations, availability);
     }
 }

@@ -33,13 +33,14 @@ public class Appointment {
 
     private boolean done;
 
-
     @Override
     public String toString() {
         return "Appointment{" +
                 "id=" + id +
+                ", date=" + date +
                 ", patient=" + patient +
                 ", doctor=" + doctor +
+                ", done=" + done +
                 '}';
     }
 
@@ -48,11 +49,11 @@ public class Appointment {
         if (this == o) return true;
         if (!(o instanceof Appointment)) return false;
         Appointment that = (Appointment) o;
-        return id == that.id && Objects.equals(date, that.date) && Objects.equals(patient, that.patient) && Objects.equals(doctor, that.doctor);
+        return id == that.id && done == that.done && Objects.equals(date, that.date) && Objects.equals(patient, that.patient) && Objects.equals(doctor, that.doctor);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, date, patient, doctor);
+        return Objects.hash(id, date, patient, doctor, done);
     }
 }

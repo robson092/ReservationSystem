@@ -5,13 +5,15 @@ import com.example.reservation.model.Doctor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.Optional;
+
 @Component
 @RequiredArgsConstructor
 public class DoctorMapper {
 
     private final SpecializationMapper specializationMapper;
     private final HospitalAffiliationMapper hospitalAffiliationMapper;
-    private final AppointmentFromDoctorViewMapper appointmentFromDoctorViewMapper;
 
     public DoctorDTO mapToDto(Doctor doctor) {
         return DoctorDTO.builder()
@@ -19,17 +21,17 @@ public class DoctorMapper {
                 .name(doctor.getName())
                 .surname(doctor.getSurname())
                 .specializations(specializationMapper.getSpecializationsDTOs(doctor))
-                .appointments(appointmentFromDoctorViewMapper.getAppointmentsFromDoctorViewDTOs(doctor))
                 .hospitalAffiliations(hospitalAffiliationMapper.getSetOfHospitalAffiliationDTO(doctor))
                 .build();
     }
 
     public Doctor mapToEntity(DoctorDTO dto) {
         return Doctor.builder()
+                .id(dto.getId())
                 .name(dto.getName())
                 .surname(dto.getSurname())
-                .specializations(specializationMapper.getSpecializations(dto))
-                .hospitalAffiliations(hospitalAffiliationMapper.getSetOfHospitalAffiliation(dto))
+                .specializations(Optional.ofNullable(specializationMapper.getSpecializations(dto)).orElse(Collections.emptySet()))
+                .hospitalAffiliations(Optional.ofNullable(hospitalAffiliationMapper.getSetOfHospitalAffiliation(dto)).orElse(Collections.emptySet()))
                 .build();
     }
 }

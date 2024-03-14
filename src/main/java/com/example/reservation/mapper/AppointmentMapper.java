@@ -1,14 +1,9 @@
 package com.example.reservation.mapper;
 
 import com.example.reservation.dto.AppointmentDTO;
-import com.example.reservation.dto.AppointmentFromDoctorViewDTO;
 import com.example.reservation.model.Appointment;
-import com.example.reservation.model.Doctor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -21,9 +16,8 @@ public class AppointmentMapper {
         return AppointmentDTO.builder()
                 .id(appointment.getId())
                 .date(appointment.getDate())
-                .patientDTO(patientMapper.mapToDto(appointment.getPatient()))
-                .doctorDTO(doctorMapper.mapToDto(appointment.getDoctor()))
-                .doctorSpecialization(appointment.getDoctor().getSpecializations())
+                .patient(patientMapper.mapToDto(appointment.getPatient()))
+                .doctor(doctorMapper.mapToDto(appointment.getDoctor()))
                 .done(appointment.isDone())
                 .build();
     }
@@ -31,8 +25,8 @@ public class AppointmentMapper {
     public Appointment mapToEntity(AppointmentDTO dto) {
         return Appointment.builder()
                 .date(dto.getDate())
-                .patient(patientMapper.mapToEntity(dto.getPatientDTO()))
-                .doctor(doctorMapper.mapToEntity(dto.getDoctorDTO()))
+                .patient(patientMapper.mapToEntity(dto.getPatient()))
+                .doctor(doctorMapper.mapToEntity(dto.getDoctor()))
                 .build();
     }
 }

@@ -21,12 +21,12 @@ public class PatientMapper {
                 .streetNum(patient.getStreetNum())
                 .postalCode(patient.getPostalCode())
                 .email(patient.getEmail())
-                .appointments(appointmentFromPatientViewMapper.getAppointmentsFromPatientViewDTOs(patient))
                 .build();
     }
 
     public Patient mapToEntity(PatientDTO dto) {
         return Patient.builder()
+                .id(dto.getId())
                 .name(dto.getName())
                 .surname(dto.getSurname())
                 .city(dto.getCity())
