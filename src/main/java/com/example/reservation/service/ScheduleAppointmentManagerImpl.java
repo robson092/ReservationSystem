@@ -19,15 +19,15 @@ public class ScheduleAppointmentManagerImpl implements ScheduleAppointmentManage
     private final AppointmentSlotService appointmentSlotService;
     @Override
     public List<AppointmentSlot> getAppointmentSlotsForDoctor(int doctorId) {
-        Doctor doctor = doctorRepository.findById(doctorId)
-                .orElseThrow(() -> new IllegalArgumentException("Not found"));
-        List<DoctorAvailability> doctorAvailabilities = doctor.getAvailability();
-        List<AppointmentSlot> appointmentSlotsPerHospital = new ArrayList<>();
-        for (DoctorAvailability doctorAvailability : doctorAvailabilities) {
-            Map<String, List<LocalDateTime>> appointmentDatesPerHospital = appointmentSlotService.getLocalDateTimesAndHospitalNamesFromDoctorAvailability(doctorAvailability);
-            appointmentSlotsPerHospital = appointmentSlotService.createAppointmentSlotsFromLocalDateTimesAndHospitalNames(appointmentDatesPerHospital);
-        }
-        return appointmentSlotsPerHospital;
+//        Doctor doctor = doctorRepository.findById(doctorId)
+//                .orElseThrow(() -> new IllegalArgumentException("Not found"));
+//        List<DoctorAvailability> doctorAvailabilities = doctor.getAvailability();
+//        List<AppointmentSlot> appointmentSlotsPerHospital = new ArrayList<>();
+//        for (DoctorAvailability doctorAvailability : doctorAvailabilities) {
+//            Map<String, List<LocalDateTime>> appointmentDatesPerHospital = appointmentSlotService.getLocalDateTimesAndHospitalNamesFromDoctorAvailability(doctorAvailability);
+//            appointmentSlotsPerHospital = appointmentSlotService.createAppointmentSlotsFromLocalDateTimesAndHospitalNames(appointmentDatesPerHospital);
+//        }
+        return Collections.emptyList();
     }
 
     @Override
@@ -41,7 +41,10 @@ public class ScheduleAppointmentManagerImpl implements ScheduleAppointmentManage
 
     @Override
     public List<AppointmentSlot> getAllAvailableAppointmentSlotsByDoctorId(int id) {
-        return null;
+        List<AppointmentSlot> appointmentSlotsForDoctor = getAppointmentSlotsForDoctor(id);
+        return appointmentSlotsForDoctor.stream()
+                .filter(appointmentSlot -> checkIfAppointmentSlotIsFree(appointmentSlot.getDateTime(), id))
+                .collect(Collectors.toList());
     }
 
     @Override

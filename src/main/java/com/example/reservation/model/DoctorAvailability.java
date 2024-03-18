@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -21,6 +22,7 @@ public class DoctorAvailability {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @NotNull(message = "Date is mandatory.")
+    @Future(message = "Date must be in future.")
     private LocalDate date;
     @NotNull(message = "Start time is mandatory.")
     private LocalTime startTime;

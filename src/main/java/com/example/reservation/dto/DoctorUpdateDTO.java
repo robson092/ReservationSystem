@@ -1,6 +1,7 @@
 package com.example.reservation.dto;
 
 import com.example.reservation.enums.SpecializationEnum;
+import com.example.reservation.model.HospitalAffiliation;
 import com.example.reservation.model.Specialization;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,4 +19,5 @@ public class DoctorUpdateDTO {
     private String name;
     private String surname;
     private Set<Specialization> specializations;
+    private Set<HospitalAffiliation> hospitalAffiliations;
 }
