@@ -1,5 +1,6 @@
 package com.example.reservation.service;
 
+import com.example.reservation.model.Appointment;
 import com.example.reservation.model.AppointmentSlot;
 import com.example.reservation.model.Doctor;
 import com.example.reservation.model.DoctorAvailability;
@@ -20,12 +21,13 @@ public class AppointmentSlotServiceImpl implements AppointmentSlotService {
     private final DoctorRepository doctorRepository;
 
     @Override
-    public List<AppointmentSlot> getAllAppointmentSlotsForDoctor(Integer id) {
+    public List<AppointmentSlot> getAllFreeAppointmentSlotsForDoctor(Integer id) {
         Map<String, List<LocalDateTime>> appointmentDatesPerHospital = getAllDoctorAvailabilityDaysAndHours(id);
         List<AppointmentSlot> appointmentSlots = new ArrayList<>();
         for (Map.Entry<String, List<LocalDateTime>> entry : appointmentDatesPerHospital.entrySet()) {
             List<LocalDateTime> slots = entry.getValue();
-            for (LocalDateTime slot : slots) {
+            List<LocalDateTime> freeSlots = getFreeSlots(id, slots);
+            for (LocalDateTime slot : freeSlots) {
                 AppointmentSlot appointmentSlot = AppointmentSlot.builder()
                         .hospital(entry.getKey())
                         .dateTime(slot)
@@ -38,17 +40,17 @@ public class AppointmentSlotServiceImpl implements AppointmentSlotService {
     }
 
     @Override
-    public List<AppointmentSlot> getAllAppointmentSlotsForDoctorByHospital(Integer id, String hospital) {
-        List<AppointmentSlot> allAppointmentSlotsForDoctor = getAllAppointmentSlotsForDoctor(id);
+    public List<AppointmentSlot> getAllFreeAppointmentSlotsForDoctorByHospital(Integer id, String hospital) {
+        List<AppointmentSlot> allAppointmentSlotsForDoctor = getAllFreeAppointmentSlotsForDoctor(id);
         return allAppointmentSlotsForDoctor.stream()
                 .filter(appointmentSlot -> appointmentSlot.getHospital().equals(hospital))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<AppointmentSlot> getAllAppointmentSlotsForDoctorByDate(Integer id, String date) {
+    public List<AppointmentSlot> getAllFreeAppointmentSlotsForDoctorByDate(Integer id, String date) {
         LocalDate parsedDate = LocalDate.parse(date);
-        List<AppointmentSlot> allAppointmentSlotsForDoctor = getAllAppointmentSlotsForDoctor(id);
+        List<AppointmentSlot> allAppointmentSlotsForDoctor = getAllFreeAppointmentSlotsForDoctor(id);
         return allAppointmentSlotsForDoctor.stream()
                 .filter(appointmentSlot -> appointmentSlot.getDateTime().toLocalDate().equals(parsedDate))
                 .collect(Collectors.toList());
@@ -87,5 +89,16 @@ public class AppointmentSlotServiceImpl implements AppointmentSlotService {
         return Stream.of(first, second)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
+    }
+
+    private List<LocalDateTime> getFreeSlots(Integer id, List<LocalDateTime> slots) {
+        Doctor doctor = doctorRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Not Found"));
+        Set<Appointment> appointments = doctor.getAppointments();
+        List<LocalDateTime> appointmentsDates = appointments.stream()
+                .map(Appointment::getDate)
+                .collect(Collectors.toList());
+        slots.removeAll(appointmentsDates);
+        return slots;
     }
 }

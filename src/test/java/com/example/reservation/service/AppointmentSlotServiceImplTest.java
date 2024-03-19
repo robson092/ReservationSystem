@@ -1,70 +1,115 @@
 package com.example.reservation.service;
 
-import com.example.reservation.model.AppointmentSlot;
-import com.example.reservation.model.DoctorAvailability;
+import com.example.reservation.model.*;
 import com.example.reservation.repository.DoctorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AppointmentSlotServiceImplTest {
 
+    @Mock
+    DoctorRepository mockDoctorRepository;
+    @InjectMocks
     AppointmentSlotServiceImpl appointmentSlotService;
+    Doctor doctor;
     DoctorAvailability doctorAvailability;
     @BeforeEach
     void setUp() {
-        DoctorRepository mockDoctorRepository = mock(DoctorRepository.class);
-        appointmentSlotService = new AppointmentSlotServiceImpl(mockDoctorRepository);
+        doctor = new Doctor();
         doctorAvailability = new DoctorAvailability();
-    }
-
-
-    @Test
-    @DisplayName("Should return map with hospital names and dates when invoke on existing doctor availability")
-    void when_invoke_with_existing_doctorAvailability_then_return_map_with_hospital_and_localDateTime() {
-//        HospitalAffiliation hospitalAffiliation = new HospitalAffiliation();
-//        hospitalAffiliation.setHospitalName("Hospital");
-//        doctorAvailability.setHospitalAffiliation(hospitalAffiliation);
-//        AppointmentSlotServiceImpl appointmentSlotService = new AppointmentSlotServiceImpl();
-//        var spyAppointmentSlotService = spy(appointmentSlotService);
-//        List<LocalDateTime> localDateTimes = new ArrayList<>();
-//
-//        doReturn(localDateTimes).when(spyAppointmentSlotService).getLocalDateTimeFromStartTimeAndEndTime(any(DoctorAvailability.class), anyInt());
-//
-//        Map<String, List<LocalDateTime>> expected = spyAppointmentSlotService.getLocalDateTimesAndHospitalNamesFromDoctorAvailability(doctorAvailability);
-//        assertTrue(expected.containsKey(hospitalAffiliation.getHospitalName()));
+        doctorAvailability.setDate(LocalDate.MAX);
+        doctorAvailability.setStartTime(LocalTime.MAX.minusMinutes(100));
+        doctorAvailability.setEndTime(LocalTime.MAX);
+        HospitalAffiliation hospitalAffiliation = new HospitalAffiliation();
+        hospitalAffiliation.setHospitalName("Hospital");
+        hospitalAffiliation.setTimeSlotPerClientInMinute(10);
+        doctorAvailability.setHospitalAffiliation(hospitalAffiliation);
+        doctor.setAvailability(List.of(doctorAvailability));
     }
 
     @Test
-    @DisplayName("Should return list of AppointmentSlots objects when pass with map contains hospital name and localDateTimes")
-    void when_invoke_with_hospitalNames_and_localDateTimes_map_then_return_list_of_appointmentSlots_objects() {
-//        List<LocalDateTime> localDateTimes = List.of(LocalDateTime.now());
-//        String hospitalName = "Hospital";
-//        Map<String, List<LocalDateTime>> hospitalsWithLocalDateTimes = new HashMap<>();
-//        hospitalsWithLocalDateTimes.put(hospitalName, localDateTimes);
-//        AppointmentSlot appointmentSlot = AppointmentSlot.builder()
-//                .hospital(hospitalName)
-//                .dateTime(localDateTimes.get(0))
-//                .dayOfWeek(localDateTimes.get(0).getDayOfWeek())
-//                .build();
-//        List<AppointmentSlot> appointmentSlots = List.of(appointmentSlot);
-//
-//        List<AppointmentSlot> expected = appointmentSlotService.createAppointmentSlotsForDoctor(hospitalsWithLocalDateTimes);
-//
-//        assertThat(expected).isEqualTo(appointmentSlots);
+    @DisplayName("Should return list of all AppointmentSlots objects when pass with correct doctor id")
+    void when_getAllFreeAppointmentSlotsForDoctor_with_correct_doctor_id_then_return_list_of_appointmentSlots_objects() {
+        AppointmentSlot appointmentSlot = new AppointmentSlot();
+        List<AppointmentSlot> appointmentSlots = new ArrayList<>();
+        appointmentSlots.add(appointmentSlot);
+        Appointment appointment = new Appointment();
+        appointment.setDate(LocalDateTime.now().plusMinutes(20));
+        doctor.setAppointments(Set.of(appointment));
+
+        when(mockDoctorRepository.findById(anyInt())).thenReturn(Optional.of(doctor));
+
+        List<AppointmentSlot> expected = appointmentSlotService.getAllFreeAppointmentSlotsForDoctor(1);
+        assertThat(expected).hasSameClassAs(appointmentSlots);
+        verify(mockDoctorRepository, times(2)).findById(1);
+    }
+
+    @Test
+    @DisplayName("Should return empty list when another appointment date is the same as appointmentSlot date")
+    void when_getAllFreeAppointmentSlotsForDoctor_with_appointment_date_the_same_as_appointment_slot_date_then_return_empty_list() {
+        Appointment appointment = new Appointment();
+        int timeSlotPerClientInMinute = doctorAvailability.getHospitalAffiliation().getTimeSlotPerClientInMinute();
+        appointment.setDate(LocalDateTime.MAX.minusMinutes(timeSlotPerClientInMinute));
+        doctor.setAppointments(Set.of(appointment));
+
+        when(mockDoctorRepository.findById(anyInt())).thenReturn(Optional.of(doctor));
+
+        List<AppointmentSlot> actual = appointmentSlotService.getAllFreeAppointmentSlotsForDoctor(1);
+        assertEquals(9, actual.size());
+        verify(mockDoctorRepository, times(2)).findById(1);
+    }
+
+    @Test
+    @DisplayName("Should throw exception when pass with incorrect doctor id")
+    void when_getAllAppointmentSlotsForDoctor_with_incorrect_doctor_id_then_throw_exception() {
+        when(mockDoctorRepository.findById(anyInt())).thenThrow(NoSuchElementException.class);
+        assertThrows(NoSuchElementException.class, () -> appointmentSlotService.getAllFreeAppointmentSlotsForDoctor(1));
+        verify(mockDoctorRepository).findById(1);
+    }
+
+    @Test
+    @DisplayName("Should return list of AppointmentSlots with given hospital when pass with correct doctor id")
+    void when_getAllAppointmentSlotsForDoctorByHospital_with_correct_doctor_id_then_return_list_of_appointmentSlots_of_given_hospital() {
+        Appointment appointment = new Appointment();
+        doctor.setAppointments(Set.of(appointment));
+        int timeSlotPerClientInMinute = doctorAvailability.getHospitalAffiliation().getTimeSlotPerClientInMinute();
+        appointment.setDate(LocalDateTime.MAX.minusMinutes(timeSlotPerClientInMinute));
+
+        when(mockDoctorRepository.findById(anyInt())).thenReturn(Optional.of(doctor));
+
+        List<AppointmentSlot> expected = appointmentSlotService.getAllFreeAppointmentSlotsForDoctor(1);
+        assertThat(expected.get(0).getHospital()).isEqualTo("Hospital");
+        verify(mockDoctorRepository, times(2)).findById(1);
+    }
+
+    @Test
+    @DisplayName("Should return list of AppointmentSlots with given date when pass with correct doctor id")
+    void when_getAllAppointmentSlotsForDoctorByHospital_with_correct_doctor_id_then_return_list_of_appointmentSlots_of_given_date() {
+        Appointment appointment = new Appointment();
+        doctor.setAppointments(Set.of(appointment));
+        int timeSlotPerClientInMinute = doctorAvailability.getHospitalAffiliation().getTimeSlotPerClientInMinute();
+        appointment.setDate(LocalDateTime.MAX.minusMinutes(timeSlotPerClientInMinute));
+
+        when(mockDoctorRepository.findById(anyInt())).thenReturn(Optional.of(doctor));
+
+        List<AppointmentSlot> expected = appointmentSlotService.getAllFreeAppointmentSlotsForDoctor(1);
+        assertThat(expected.get(0).getDateTime().toLocalDate()).isEqualTo(doctorAvailability.getDate());
+        verify(mockDoctorRepository, times(2)).findById(1);
     }
 }

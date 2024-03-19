@@ -47,17 +47,17 @@ public class DoctorAvailabilityController {
 
     @GetMapping("/search/doctor/{id}/hours")
     ResponseEntity<List<AppointmentSlot>> getDoctorAvailableHours(@PathVariable int id) {
-        return ResponseEntity.ok(appointmentSlotService.getAllAppointmentSlotsForDoctor(id));
+        return ResponseEntity.ok(appointmentSlotService.getAllFreeAppointmentSlotsForDoctor(id));
     }
 
     @GetMapping("/search/doctor/{id}/hours/hospital")
     ResponseEntity<List<AppointmentSlot>> getDoctorAvailableHoursByHospital(@PathVariable int id, @RequestParam("v") String hospital) {
-        return ResponseEntity.ok(appointmentSlotService.getAllAppointmentSlotsForDoctorByHospital(id , hospital));
+        return ResponseEntity.ok(appointmentSlotService.getAllFreeAppointmentSlotsForDoctorByHospital(id , hospital));
     }
 
     @GetMapping("/search/doctor/{id}/hours/date")
     ResponseEntity<List<AppointmentSlot>> getDoctorAvailableHoursByDate(@PathVariable int id, @RequestParam("v") String date) {
-        return ResponseEntity.ok(appointmentSlotService.getAllAppointmentSlotsForDoctorByDate(id, date));
+        return ResponseEntity.ok(appointmentSlotService.getAllFreeAppointmentSlotsForDoctorByDate(id, date));
     }
 
     @PostMapping
