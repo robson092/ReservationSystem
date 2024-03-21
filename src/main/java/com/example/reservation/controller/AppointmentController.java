@@ -45,13 +45,10 @@ public class AppointmentController {
         return ResponseEntity.ok(service.getDoneAppointments(state));
     }
 
-//    @PostMapping
-//    ResponseEntity<AppointmentDTO> addAppointment(@Valid @RequestBody AppointmentDTO appointmentDTO) {
-//        AppointmentDTO appointment = service.save(appointmentDTO);
-//        return ResponseEntity
-//                .created(URI.create("/" + appointment.getId()))
-//                .body(appointment);
-//    }
+    @GetMapping("/search/doctor/{id}")
+    ResponseEntity<List<AppointmentDTO>> getAppointmentByDoctor(@PathVariable int id) {
+        return ResponseEntity.ok(service.getAppointmentsByDoctor(id));
+    }
 
     @PostMapping
     ResponseEntity<AppointmentDTO> addAppointment(@Valid @RequestBody ScheduleAppointmentTemplate appointmentTemplate) {

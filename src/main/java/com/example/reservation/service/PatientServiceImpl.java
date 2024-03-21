@@ -32,7 +32,7 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public List<PatientDTO> getAllPatients() {
-        List<Patient> patients = new ArrayList<>(repository.findAll());
+        List<Patient> patients = repository.findAll();
         return patients.stream()
                 .map(mapper::mapToDto)
                 .collect(Collectors.toList());
@@ -40,7 +40,7 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public List<PatientDTO> getAllPatientsWithPage(Pageable page) {
-        List<Patient> patients = new ArrayList<>(repository.findAll(page).getContent());
+        List<Patient> patients = repository.findAll(page).getContent();
         return patients.stream()
                 .map(mapper::mapToDto)
                 .collect(Collectors.toList());

@@ -30,7 +30,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<AppointmentDTO> getAllAppointments() {
-        ArrayList<Appointment> appointments = new ArrayList<>(repository.findAll());
+        List<Appointment> appointments = repository.findAll();
         return appointments.stream()
                 .map(mapper::mapToDto)
                 .collect(Collectors.toList());
@@ -38,7 +38,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<AppointmentDTO> getAllAppointmentsWithPage(Pageable page) {
-        ArrayList<Appointment> appointments = new ArrayList<>(repository.findAll(page).getContent());
+        List<Appointment> appointments = repository.findAll(page).getContent();
         return appointments.stream()
                 .map(mapper::mapToDto)
                 .collect(Collectors.toList());
@@ -46,7 +46,15 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<AppointmentDTO> getDoneAppointments(boolean done) {
-        List<Appointment> appointments = new ArrayList<>(repository.findByDone(done));
+        List<Appointment> appointments = repository.findByDone(done);
+        return appointments.stream()
+                .map(mapper::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AppointmentDTO> getAppointmentsByDoctor(Integer id) {
+        List<Appointment> appointments = repository.findByDoctor(id);
         return appointments.stream()
                 .map(mapper::mapToDto)
                 .collect(Collectors.toList());
