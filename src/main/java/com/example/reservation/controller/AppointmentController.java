@@ -2,8 +2,10 @@ package com.example.reservation.controller;
 
 import com.example.reservation.dto.AppointmentDTO;
 import com.example.reservation.model.Appointment;
+import com.example.reservation.model.ScheduleAppointmentTemplate;
 import com.example.reservation.service.AppointmentService;
 import com.example.reservation.service.AppointmentServiceImpl;
+import com.example.reservation.service.ScheduleAppointmentManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import java.util.List;
 public class AppointmentController {
 
     private final AppointmentService service;
+    private final ScheduleAppointmentManager scheduleAppointmentManager;
 
     @GetMapping(params = {"!sort", "!page", "!size"})
     ResponseEntity<List<AppointmentDTO>> getAllAppointments() {
@@ -42,12 +45,20 @@ public class AppointmentController {
         return ResponseEntity.ok(service.getDoneAppointments(state));
     }
 
+//    @PostMapping
+//    ResponseEntity<AppointmentDTO> addAppointment(@Valid @RequestBody AppointmentDTO appointmentDTO) {
+//        AppointmentDTO appointment = service.save(appointmentDTO);
+//        return ResponseEntity
+//                .created(URI.create("/" + appointment.getId()))
+//                .body(appointment);
+//    }
+
     @PostMapping
-    ResponseEntity<AppointmentDTO> addAppointment(@Valid @RequestBody AppointmentDTO appointmentDTO) {
-        AppointmentDTO appointment = service.save(appointmentDTO);
+    ResponseEntity<AppointmentDTO> addAppointment(@Valid @RequestBody ScheduleAppointmentTemplate appointmentTemplate) {
+        AppointmentDTO appointmentDTO = scheduleAppointmentManager.schedule(appointmentTemplate);
         return ResponseEntity
-                .created(URI.create("/" + appointment.getId()))
-                .body(appointment);
+                .created(URI.create("/" + appointmentDTO.getId()))
+                .body(appointmentDTO);
     }
 
     @DeleteMapping("/{id}")

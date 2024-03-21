@@ -3,6 +3,7 @@ package com.example.reservation.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -30,6 +31,9 @@ public class HospitalAffiliation {
 
     @ManyToMany(mappedBy = "hospitalAffiliations")
     private Set<Doctor> doctors;
+
+    @OneToMany(mappedBy = "hospitalAffiliation")
+    private List<DoctorAvailability> doctorAvailabilities;
 
     @Override
     public boolean equals(Object o) {

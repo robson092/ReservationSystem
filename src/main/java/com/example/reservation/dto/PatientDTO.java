@@ -26,6 +26,4 @@ public class PatientDTO {
 
     private String email;
 
-    private Set<AppointmentFromPatientViewDTO> appointments;
-
 }

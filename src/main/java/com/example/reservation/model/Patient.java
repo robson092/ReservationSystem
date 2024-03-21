@@ -1,7 +1,6 @@
 package com.example.reservation.model;
 
 
-import com.example.reservation.dto.AppointmentFromPatientViewDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -9,7 +8,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Getter @Setter
 @Entity
@@ -63,13 +61,14 @@ public class Patient {
                 ", streetNum=" + streetNum +
                 ", postalCode=" + postalCode +
                 ", email='" + email + '\'' +
+                ", appointments=" + appointments +
                 '}';
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Patient)) return false;
         Patient patient = (Patient) o;
         return id == patient.id && streetNum == patient.streetNum && postalCode == patient.postalCode && Objects.equals(name, patient.name) && Objects.equals(surname, patient.surname) && Objects.equals(city, patient.city) && Objects.equals(street, patient.street) && Objects.equals(email, patient.email);
     }

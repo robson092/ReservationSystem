@@ -4,6 +4,7 @@ import com.example.reservation.dto.AppointmentDTO;
 import com.example.reservation.mapper.AppointmentMapper;
 import com.example.reservation.model.Appointment;
 import com.example.reservation.repository.AppointmentRepository;
+import com.example.reservation.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

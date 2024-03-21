@@ -1,17 +1,12 @@
 package com.example.reservation.service;
 
 import com.example.reservation.dto.AppointmentDTO;
-import com.example.reservation.dto.DoctorDTO;
-import com.example.reservation.dto.HospitalFromDoctorViewDTO;
-import com.example.reservation.dto.SpecializationFromDoctorViewDTO;
-import com.example.reservation.enums.SpecializationEnum;
 import com.example.reservation.exception_handler.CannotDeleteException;
 import com.example.reservation.mapper.AppointmentMapper;
 import com.example.reservation.model.Appointment;
-import com.example.reservation.model.Doctor;
-import com.example.reservation.model.HospitalAffiliation;
-import com.example.reservation.model.Specialization;
 import com.example.reservation.repository.AppointmentRepository;
+import com.example.reservation.repository.DoctorRepository;
+import com.example.reservation.repository.PatientRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

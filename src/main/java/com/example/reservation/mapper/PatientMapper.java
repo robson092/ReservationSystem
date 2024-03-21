@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class PatientMapper {
 
-    private final AppointmentFromPatientViewMapper appointmentFromPatientViewMapper;
-
     public PatientDTO mapToDto(Patient patient) {
         return PatientDTO.builder()
                 .id(patient.getId())
@@ -21,12 +19,12 @@ public class PatientMapper {
                 .streetNum(patient.getStreetNum())
                 .postalCode(patient.getPostalCode())
                 .email(patient.getEmail())
-                .appointments(appointmentFromPatientViewMapper.getAppointmentsFromPatientViewDTOs(patient))
                 .build();
     }
 
     public Patient mapToEntity(PatientDTO dto) {
         return Patient.builder()
+                .id(dto.getId())
                 .name(dto.getName())
                 .surname(dto.getSurname())
                 .city(dto.getCity())

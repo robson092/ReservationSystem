@@ -40,13 +40,13 @@ class DoctorServiceImplTest {
     SpecializationRepository mockSpecializationRepo;
 
     @Mock
-    HospitalAffiliationRepository mockHospitalAffilRepo;
+    HospitalAffiliationRepository mockHospitalAffiliationRepo;
 
     @Mock
     DoctorMapper mockDoctorMapper;
 
     @Mock
-    DoctorUpdateMapper updateMapper;
+    DoctorUpdateMapper doctorUpdateMapper;
 
     @InjectMocks
     DoctorServiceImpl doctorService;
@@ -113,11 +113,10 @@ class DoctorServiceImplTest {
     void when_save_then_return_doctor() {
         doctorDTO.setId(1);
         doctorDTO.setSpecializations(Set.of(new SpecializationFromDoctorViewDTO()));
-        doctorDTO.setHospitalAffiliations(Set.of(new HospitalFromDoctorViewDTO("testHospital", "testCity", "testStreet")));
         doctor.setId(1);
-        doctor.setSpecializations(Set.of(new Specialization(any(SpecializationEnum.class))));
+        doctor.setSpecializations(Set.of(new Specialization()));
         doctor.setHospitalAffiliations(Set.of(new HospitalAffiliation()));
-        when(mockDoctorRepo.save(doctor)).thenAnswer(i -> i.getArguments()[0]);
+        doReturn(doctor).when(mockDoctorRepo).save(doctor);
         when(mockDoctorMapper.mapToDto(doctor)).thenReturn(doctorDTO);
         when(mockDoctorMapper.mapToEntity(doctorDTO)).thenReturn(doctor);
 
@@ -214,13 +213,13 @@ class DoctorServiceImplTest {
         List<DoctorDTO> doctorDTOs = new ArrayList<>();
         doctorDTOs.add(doctorDTO);
 
-        when(mockHospitalAffilRepo.findByHospitalNameAndCity("Hospital", "Warsaw")).thenReturn(Optional.of(hospitalAffiliation));
+        when(mockHospitalAffiliationRepo.findByHospitalNameAndCity("Hospital", "Warsaw")).thenReturn(Optional.of(hospitalAffiliation));
         when(mockDoctorRepo.findByHospitalAffiliations(hospitalAffiliation)).thenReturn(doctors);
         when(mockDoctorMapper.mapToDto(doctor)).thenReturn(doctorDTO);
         List<DoctorDTO> expected = doctorService.getAllDoctorsByCityAndHospitalName("Warsaw", "Hospital");
 
         assertThat(expected).isEqualTo(doctorDTOs);
-        verify(mockHospitalAffilRepo).findByHospitalNameAndCity("Hospital", "Warsaw");
+        verify(mockHospitalAffiliationRepo).findByHospitalNameAndCity("Hospital", "Warsaw");
         verify(mockDoctorRepo).findByHospitalAffiliations(hospitalAffiliation);
     }
 
@@ -229,11 +228,11 @@ class DoctorServiceImplTest {
     void when_getAllDoctorsByCityAndHospitalName_with_not_existing_city_or_hospital_then_return_empty_list() {
         List<DoctorDTO> emptyListOfDoctors = new ArrayList<>();
 
-        when(mockHospitalAffilRepo.findByHospitalNameAndCity(anyString(), anyString())).thenReturn(Optional.empty());
+        when(mockHospitalAffiliationRepo.findByHospitalNameAndCity(anyString(), anyString())).thenReturn(Optional.empty());
         List<DoctorDTO> expected = doctorService.getAllDoctorsByCityAndHospitalName("Hospital", "City");
 
         assertThat(expected).isEqualTo(emptyListOfDoctors);
-        verify(mockHospitalAffilRepo).findByHospitalNameAndCity(anyString(), anyString());
+        verify(mockHospitalAffiliationRepo).findByHospitalNameAndCity(anyString(), anyString());
     }
 
     @Test
@@ -248,12 +247,12 @@ class DoctorServiceImplTest {
         List<DoctorDTO> doctorDTOs = new ArrayList<>();
         doctorDTOs.add(doctorDTO);
 
-        when(mockHospitalAffilRepo.findByCity("Warsaw")).thenReturn(hospitalAffiliations);
+        when(mockHospitalAffiliationRepo.findByCity("Warsaw")).thenReturn(hospitalAffiliations);
         when(mockDoctorMapper.mapToDto(doctor)).thenReturn(doctorDTO);
         List<DoctorDTO> expected = doctorService.getAllDoctorsByCity("Warsaw");
 
         assertThat(expected).isEqualTo(doctorDTOs);
-        verify(mockHospitalAffilRepo).findByCity("Warsaw");
+        verify(mockHospitalAffiliationRepo).findByCity("Warsaw");
     }
 
     @Test
@@ -261,10 +260,10 @@ class DoctorServiceImplTest {
     void when_getAllDoctorsByCity_with_not_existing_city_then_return_empty_list() {
         List<DoctorDTO> emptyListOfDoctors = new ArrayList<>();
 
-        when(mockHospitalAffilRepo.findByCity(anyString())).thenReturn(Collections.emptyList());
+        when(mockHospitalAffiliationRepo.findByCity(anyString())).thenReturn(Collections.emptyList());
         List<DoctorDTO> expected = doctorService.getAllDoctorsByCity("City");
 
         assertThat(expected).isEqualTo(emptyListOfDoctors);
-        verify(mockHospitalAffilRepo).findByCity(anyString());
+        verify(mockHospitalAffiliationRepo).findByCity(anyString());
     }
 }
