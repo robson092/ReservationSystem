@@ -1,12 +1,19 @@
 package com.example.reservation.service;
 
+import com.example.reservation.dto.AppointmentDTO;
+import com.example.reservation.dto.DoctorDTO;
+import com.example.reservation.dto.HospitalAffiliationDTO;
+import com.example.reservation.dto.PatientDTO;
 import com.example.reservation.model.AppointmentSlot;
 import com.example.reservation.model.Doctor;
 import com.example.reservation.model.DoctorAvailability;
+import com.example.reservation.model.ScheduleAppointmentTemplate;
 import com.example.reservation.repository.DoctorRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.AdditionalAnswers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -17,7 +24,9 @@ import java.time.LocalTime;
 import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.Matchers.samePropertyValuesAs;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
@@ -25,55 +34,62 @@ import static org.mockito.Mockito.*;
 class ScheduleAppointmentManagerImplTest {
 
     @Mock
-    DoctorRepository doctorRepository;
+    AppointmentServiceImpl appointmentService;
     @Mock
-    AppointmentSlotService appointmentSlotService;
+    AppointmentSlotServiceImpl appointmentSlotService;
 
     @InjectMocks
     ScheduleAppointmentManagerImpl scheduleAppointmentManager;
 
-    @Test
-    @DisplayName("Should return all appointment slots for doctor if doctorId is correct")
-    void when_getAppointmentSlotsForDoctor_with_correct_id_then_return_list_of_appointmentSlot() {
-//        Doctor doctor = new Doctor();
-//        DoctorAvailability doctorAvailability = new DoctorAvailability();
-//        List<DoctorAvailability> doctorAvailabilities = new ArrayList<>();
-//        doctorAvailabilities.add(doctorAvailability);
-//        doctor.setAvailability(doctorAvailabilities);
-//        Map<String, List<LocalDateTime>> hospitalsWithDates = new HashMap<>();
-//        List<AppointmentSlot> appointmentSlots = List.of(new AppointmentSlot());
-//
-//        when(doctorRepository.findById(anyInt())).thenReturn(Optional.of(doctor));
-//        when(appointmentSlotService.getLocalDateTimesAndHospitalNamesFromDoctorAvailability(doctorAvailability)).thenReturn(hospitalsWithDates);
-//        when(appointmentSlotService.createAppointmentSlotsFromLocalDateTimesAndHospitalNames(hospitalsWithDates)).thenReturn(appointmentSlots);
-//        List<AppointmentSlot> expected = scheduleAppointmentManager.getAppointmentSlotsForDoctor(1);
-//
-//        assertThat(expected).isEqualTo(appointmentSlots);
-//        verify(doctorRepository).findById(1);
+    ScheduleAppointmentTemplate appointmentTemplate;
+    AppointmentDTO appointmentDTO;
+    AppointmentSlot appointmentSlot;
+
+    @BeforeEach
+    void setUp() {
+        PatientDTO patientDTO = new PatientDTO();
+        DoctorDTO doctorDTO = new DoctorDTO();
+        HospitalAffiliationDTO hospitalAffiliationDTO = new HospitalAffiliationDTO();
+        hospitalAffiliationDTO.setHospitalName("Hospital");
+        appointmentDTO = new AppointmentDTO();
+        appointmentSlot = new AppointmentSlot();
+        appointmentSlot.setHospital(hospitalAffiliationDTO.getHospitalName());
+        appointmentSlot.setDateTime(LocalDateTime.MAX);
+        appointmentSlot.setHospital("Hospital");
+        appointmentTemplate = new ScheduleAppointmentTemplate();
+        appointmentTemplate.setPatientDTO(patientDTO);
+        appointmentTemplate.setDoctorDTO(doctorDTO);
+        appointmentTemplate.setHospitalAffiliationDTO(hospitalAffiliationDTO);
+        appointmentTemplate.setAppointmentDateTime(LocalDateTime.MAX);
+        appointmentDTO.setDoctor(doctorDTO);
+        appointmentDTO.setPatient(patientDTO);
+        appointmentDTO.setHospital(hospitalAffiliationDTO);
+        appointmentDTO.setDate(LocalDateTime.MAX);
     }
 
     @Test
-    @DisplayName("Should return false when localDateTime is present in AppointmentSlot list")
-    void when_invoke_with_correct_doctor_id_and_localDateTime_that_exists_in_appointmentSlot_list_then_return_false() {
-        AppointmentSlot appointmentSlot = AppointmentSlot.builder()
-                .hospital("hospitalName")
-                .dateTime(LocalDateTime.now())
-                .dayOfWeek(LocalDateTime.now().getDayOfWeek())
-                .build();
+    @DisplayName("Should return appointmentDTO when invoke")
+    void when_schedule_with_appointment_template_then_return_appointmentDTO() {
         List<AppointmentSlot> appointmentSlots = List.of(appointmentSlot);
-        ScheduleAppointmentManagerImpl scheduleAppointmentManager = new ScheduleAppointmentManagerImpl(doctorRepository, appointmentSlotService);
-        var spyScheduleAppManager = spy(scheduleAppointmentManager);
+        appointmentTemplate.setAppointmentDateTime(LocalDateTime.MAX);
 
-        doReturn(appointmentSlots).when(spyScheduleAppManager).getAppointmentSlotsForDoctor(anyInt());
+        when(appointmentSlotService.getAllFreeAppointmentSlotsForDoctor(anyInt())).thenReturn(appointmentSlots);
+        when(appointmentService.save(any(AppointmentDTO.class))).then(AdditionalAnswers.returnsFirstArg());
 
-        assertFalse(spyScheduleAppManager.checkIfAppointmentSlotIsFree(LocalDateTime.now().plusMinutes(10), 0));
+        AppointmentDTO actual = scheduleAppointmentManager.schedule(appointmentTemplate);
+
+        assertThat(actual).isEqualTo(appointmentDTO);
+        verify(appointmentService).save(appointmentDTO);
     }
 
     @Test
-    void getAllAvailableAppointmentSlotsByDoctorId() {
-    }
+    @DisplayName("Should throw IllegalArgumentException when proposed time is not free")
+    void when_schedule_with_appointment_template_contains_not_free_appointment_date_time_then_throw_IllegalArgumentException() {
+        List<AppointmentSlot> appointmentSlots = List.of(appointmentSlot);
+        appointmentTemplate.setAppointmentDateTime(LocalDateTime.MIN);
 
-    @Test
-    void getAllUpcomingAvailableAppointmentSlots() {
+        when(appointmentSlotService.getAllFreeAppointmentSlotsForDoctor(anyInt())).thenReturn(appointmentSlots);
+
+        assertThrows(IllegalArgumentException.class, () -> scheduleAppointmentManager.schedule(appointmentTemplate));
     }
 }

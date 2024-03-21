@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class PatientMapper {
 
-    private final AppointmentFromPatientViewMapper appointmentFromPatientViewMapper;
-
     public PatientDTO mapToDto(Patient patient) {
         return PatientDTO.builder()
                 .id(patient.getId())

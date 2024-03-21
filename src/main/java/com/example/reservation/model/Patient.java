@@ -1,7 +1,6 @@
 package com.example.reservation.model;
 
 
-import com.example.reservation.dto.AppointmentFromPatientViewDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -9,7 +8,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Getter @Setter
 @Entity

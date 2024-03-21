@@ -14,6 +14,4 @@ public class DoctorDTO {
     private String name;
     private String surname;
     private Set<SpecializationFromDoctorViewDTO> specializations;
-    private Set<HospitalAffiliationDTO> hospitalAffiliations;
-
 }

@@ -54,7 +54,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public AppointmentDTO save(AppointmentDTO appointmentDTO) {
-
         Appointment appointment = mapper.mapToEntity(appointmentDTO);
         Appointment savedAppointment = repository.save(appointment);
         return mapper.mapToDto(savedAppointment);

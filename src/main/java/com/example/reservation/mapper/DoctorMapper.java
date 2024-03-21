@@ -21,7 +21,6 @@ public class DoctorMapper {
                 .name(doctor.getName())
                 .surname(doctor.getSurname())
                 .specializations(specializationMapper.getSpecializationsDTOs(doctor))
-                .hospitalAffiliations(hospitalAffiliationMapper.getSetOfHospitalAffiliationDTO(doctor))
                 .build();
     }
 
@@ -31,7 +30,6 @@ public class DoctorMapper {
                 .name(dto.getName())
                 .surname(dto.getSurname())
                 .specializations(Optional.ofNullable(specializationMapper.getSpecializations(dto)).orElse(Collections.emptySet()))
-                .hospitalAffiliations(Optional.ofNullable(hospitalAffiliationMapper.getSetOfHospitalAffiliation(dto)).orElse(Collections.emptySet()))
                 .build();
     }
 }

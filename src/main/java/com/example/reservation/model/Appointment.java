@@ -30,6 +30,8 @@ public class Appointment {
     @JoinColumn(name = "doctor_id")
     @NotNull
     private Doctor doctor;
+    @OneToOne
+    private HospitalAffiliation hospitalAffiliation;
 
     private boolean done;
 

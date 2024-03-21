@@ -113,7 +113,6 @@ class DoctorServiceImplTest {
     void when_save_then_return_doctor() {
         doctorDTO.setId(1);
         doctorDTO.setSpecializations(Set.of(new SpecializationFromDoctorViewDTO()));
-        doctorDTO.setHospitalAffiliations(Set.of(new HospitalAffiliationDTO()));
         doctor.setId(1);
         doctor.setSpecializations(Set.of(new Specialization()));
         doctor.setHospitalAffiliations(Set.of(new HospitalAffiliation()));
