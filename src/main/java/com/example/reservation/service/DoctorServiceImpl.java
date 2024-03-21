@@ -36,7 +36,7 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public List<DoctorDTO> getAllDoctor() {
-        ArrayList<Doctor> doctors = new ArrayList<>(doctorRepository.findAll());
+        List<Doctor> doctors = doctorRepository.findAll();
         return doctors.stream()
                 .map(mapper::mapToDto)
                 .collect(Collectors.toList());
@@ -44,7 +44,7 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public List<DoctorDTO> getAllDoctorsWithPage(Pageable page) {
-        ArrayList<Doctor> doctors = new ArrayList<>(doctorRepository.findAll(page).getContent());
+        List<Doctor> doctors = doctorRepository.findAll(page).getContent();
         return doctors.stream()
                 .map(mapper::mapToDto)
                 .collect(Collectors.toList());
