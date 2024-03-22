@@ -1,7 +1,6 @@
 package com.example.reservation.controller;
 
 import com.example.reservation.dto.HospitalAffiliationDTO;
-import com.example.reservation.model.HospitalAffiliation;
 import com.example.reservation.service.HospitalAffiliationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +26,11 @@ public class HospitalAffiliationController {
         return hospitalAffiliationService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/doctors/{id}")
+    ResponseEntity<List<HospitalAffiliationDTO>> getHospitalByDoctor(@PathVariable Integer id) {
+        return ResponseEntity.ok(hospitalAffiliationService.findByDoctor(id));
     }
 
     @PostMapping

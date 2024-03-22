@@ -46,7 +46,6 @@ public class Doctor {
             joinColumns = {@JoinColumn(name = "doctor_id")},
             inverseJoinColumns = {@JoinColumn(name = "hospital_affiliations_id")}
     )
-    @NotEmpty
     private Set<HospitalAffiliation> hospitalAffiliations;
 
     @OneToMany(mappedBy = "doctor")
