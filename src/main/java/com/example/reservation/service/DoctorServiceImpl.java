@@ -57,10 +57,6 @@ public class DoctorServiceImpl implements DoctorService {
         if(!specializations.contains(null)) {
             doctor.setSpecializations(specializations);
         }
-        Set<HospitalAffiliation> hospitalAffiliations = setHospitalAffiliationIfAlreadyExists(doctor);
-        if (!hospitalAffiliations.contains(null)) {
-            doctor.setHospitalAffiliations(hospitalAffiliations);
-        }
         Doctor savedDoctor = doctorRepository.save(doctor);
         return mapper.mapToDto(savedDoctor);
     }
@@ -147,15 +143,5 @@ public class DoctorServiceImpl implements DoctorService {
                         .findBySpecializationType(specialization.getSpecializationType())
                         .orElse(null))
                 .collect(Collectors.toSet());
-    }
-
-    private Set<HospitalAffiliation> setHospitalAffiliationIfAlreadyExists(Doctor doctor) {
-        Set<HospitalAffiliation> requestedHospitalAffiliations = doctor.getHospitalAffiliations();
-        return requestedHospitalAffiliations.stream()
-                .map(hospitalAffiliation -> hospitalAffiliationRepository.findByHospitalNameAndCity(
-                        hospitalAffiliation.getHospitalName(), hospitalAffiliation.getCity())
-                        .orElse(null))
-                .collect(Collectors.toSet());
-
     }
 }
